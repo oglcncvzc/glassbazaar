@@ -1,103 +1,241 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useState, useContext } from "react";
+import { useRouter } from "next/navigation";
+import { useProducts } from "@/data/ProductContext";
+import { useCart } from "@/data/CartContext";
+import { Typography, Button, Row, Col, Card, Badge, Carousel, Spin } from "antd";
+import Link from "next/link";
+import { ShoppingCartOutlined, AppstoreOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { SearchContext } from './layout';
+
+const { Title } = Typography;
+
+const carouselArrowStyle = {
+  position: 'absolute' as const,
+  top: '50%',
+  transform: 'translateY(-50%)',
+  zIndex: 2,
+  width: 64,
+  height: 64,
+  borderRadius: '50%',
+  background: 'rgba(0,0,0,0.18)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: 48,
+  color: '#fff',
+  border: 'none',
+  cursor: 'pointer',
+  opacity: 0,
+  transition: 'opacity 0.3s, background 0.3s',
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const { products } = useProducts();
+  const { cart, addToCart } = useCart();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [recentlyViewed, setRecentlyViewed] = useState<any[]>([]);
+  const { search } = useContext(SearchContext);
+  const [isDark, setIsDark] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [showArrows, setShowArrows] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const logged = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(logged);
+      setUserEmail(localStorage.getItem("userEmail") || "");
+      if (!logged) router.replace("/login");
+      // Son görüntülenen ürünleri getir
+      try {
+        const ids = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+        if (Array.isArray(ids) && ids.length > 0) {
+          setRecentlyViewed(products.filter(p => ids.includes(String(p.Id))));
+        }
+      } catch {}
+      setIsDark(document.body.classList.contains('theme-dark'));
+    }
+  }, [router, products]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (products.length > 0) {
+      timeout = setTimeout(() => setInitialLoading(false), 500);
+    }
+    return () => clearTimeout(timeout);
+  }, [products]);
+
+  if (initialLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: isDark ? '#181818' : '#fff',
+        transition: 'background 0.3s'
+      }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) return null;
+
+  // Kategoriler ve görselleri
+  const categories = Array.from(new Set(products.map((p) => p.Category)));
+  const categoryImages: Record<string, string> = {};
+  products.forEach((p) => {
+    if (!categoryImages[p.Category]) categoryImages[p.Category] = p.Image;
+  });
+  // Hot Deals (en yüksek puanlı ilk 4 ürün, sadece stokta olanlar)
+  const hotDeals = [...products].filter(p => p.InStock).sort((a, b) => b.Rating - a.Rating).slice(0, 4);
+  // Sepet özeti
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Tema için renk belirleme
+  const cardBg = isDark ? '#181818' : '#fff';
+  const cardColor = isDark ? '#ededed' : '#171717';
+  const heroSubColor = isDark ? '#bdbdbd' : '#444';
+
+  // Carousel için her kategoriden bir ürün seç
+  const categoryFirstProducts = categories.map(cat => products.find(p => p.Category === cat)).filter(Boolean).slice(0, 3);
+
+  return (
+    <div style={{ minHeight: '100vh', background: 'inherit' }}>
+      {/* Hero alanı */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '32px 0 24px 0', minHeight: 180 }}>
+        <div className="welcome-message" style={{ marginBottom: 8, textAlign: 'center', fontSize: 16 }}>
+          <b>Hoş geldiniz{userEmail ? `, ${userEmail}` : ''}!</b>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Title level={1} style={{ margin: 0, fontWeight: 800, fontSize: 40, textAlign: 'center' }}>Welcome to GlassBazaar</Title>
+        <div style={{ fontSize: 20, color: heroSubColor, marginBottom: 8, textAlign: 'center' }}>Discover Unique Glassware</div>
+        <Button type="primary" size="large" style={{ marginTop: 8 }}>Shop Now</Button>
+      </div>
+      {/* Banner Carousel */}
+      <div
+        style={{ width: '100%', maxWidth: '100vw', margin: '0 auto 32px auto', position: 'relative' }}
+        onMouseEnter={() => setShowArrows(true)}
+        onMouseLeave={() => setShowArrows(false)}
+      >
+        <Carousel
+          autoplay
+          dots
+          
+          
+          
+          draggable
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {categoryFirstProducts.map((product, idx) => (
+            product ? (
+              <div key={product.Id}>
+                <div style={{ display: 'flex', alignItems: 'center', background: '#e3f2fd', borderRadius: 32, padding: 40, maxWidth: 1600, margin: '0 auto', minHeight: 260 }}>
+                  <div style={{ background: '#fff', borderRadius: 24, padding: 16, marginRight: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <img src={product.Image} alt={product.Name} style={{ height: 140, width: 140, objectFit: 'contain', borderRadius: 16 }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 32, fontWeight: 700, color: '#1976d2', marginBottom: 8 }}>{product.Category} Fırsatları</div>
+                    <div style={{ fontSize: 20, color: '#d32f2f', fontWeight: 600, marginBottom: 8 }}>Şimdi %25'e varan indirim!</div>
+                    <div style={{ fontSize: 18, color: '#333', marginBottom: 16 }}>{product.Name} ve daha fazlası seni bekliyor. Sadece bu haftaya özel kampanya!</div>
+                    <Button type="primary" size="large" onClick={() => router.push(`/products?category=${encodeURIComponent(product.Category)}`)}>
+                      Fırsatları Gör
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : null
+          ))}
+        </Carousel>
+      </div>
+      {/* Kategoriler yatay scroll görsel kartlar */}
+      <div style={{ margin: '32px 0 24px 0' }}>
+        <Title level={4} style={{ marginLeft: 8 }}>Kategoriler</Title>
+        <div style={{ display: 'flex', overflowX: 'auto', gap: 20, padding: '8px 0 8px 8px' }}>
+          {categories.map((cat, idx) => (
+            <Link key={cat + '-' + idx} href={`/products?category=${encodeURIComponent(cat)}`} style={{ textDecoration: 'none' }}>
+              <div style={{ minWidth: 120, height: 110, background: cardBg, borderRadius: 16, boxShadow: '0 2px 8px #0001', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, border: '1px solid #eee', color: cardColor, cursor: 'pointer' }}>
+                <img src={categoryImages[cat]} alt={cat} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 12, marginBottom: 4 }} />
+                <span style={{ fontWeight: 600, fontSize: 16 }}>{cat}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+      {/* Hot Deals / Öne Çıkan Ürünler */}
+      <div style={{ marginBottom: 32, marginTop: 32 }}>
+        <Title level={4} style={{ marginLeft: 8 }}>Hot Deals</Title>
+        <Row gutter={[24, 24]} style={{ margin: 0 }}>
+          {hotDeals
+            .filter(product => product.Name.toLowerCase().includes(search.toLowerCase()) || product.Category.toLowerCase().includes(search.toLowerCase()))
+            .map((product) => (
+            <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
+              <Link href={`/products/${product.Id}`} style={{ textDecoration: 'none' }}>
+                <Card
+                  hoverable
+                  className="card-fade-in"
+                  style={{ borderRadius: 16, minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: cardBg, color: cardColor }}
+                  cover={<img alt={product.Name} src={product.Image} style={{ height: 180, objectFit: "cover", borderTopLeftRadius: 16, borderTopRightRadius: 16 }} />}
+                >
+                  <Card.Meta
+                    title={<span style={{ fontWeight: 700 }}>{product.Name}</span>}
+                    description={<>
+                      <div>Fiyat: {product.Price} ₺</div>
+                      <div>Puan: {product.Rating}</div>
+                    </>}
+                  />
+                  <Button
+                    type="primary"
+                    block
+                    style={{ marginTop: 16 }}
+                    onClick={e => { e.preventDefault(); addToCart(product); }}
+                    disabled={!product.InStock}
+                  >
+                    Sepete Ekle
+                  </Button>
+                </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
+      </div>
+      {/* Son Görüntülenenler */}
+      {recentlyViewed.length > 0 && (
+        <div style={{ marginBottom: 32 }}>
+          <Title level={4} style={{ marginLeft: 8 }}>Son Görüntülenenler</Title>
+          <Row gutter={[24, 24]} style={{ margin: 0 }}>
+            {recentlyViewed.map((product) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
+                <Link href={`/products/${product.Id}`} style={{ textDecoration: 'none' }}>
+                  <Card
+                    hoverable
+                    className="card-fade-in"
+                    style={{ borderRadius: 16, minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                    cover={<img alt={product.Name} src={product.Image} style={{ height: 120, objectFit: "cover", borderTopLeftRadius: 16, borderTopRightRadius: 16 }} />}
+                  >
+                    <Card.Meta
+                      title={<span style={{ fontWeight: 700 }}>{product.Name}</span>}
+                      description={<>
+                        <div>Fiyat: {product.Price} ₺</div>
+                        <div>Puan: {product.Rating}</div>
+                      </>}
+                    />
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+        </div>
+      )}
+      {/* About Us */}
+      <div style={{ background: '#e3f2fd', borderRadius: 16, margin: '32px 16px', padding: 32, textAlign: 'center' }}>
+        <Title level={5} style={{ marginBottom: 8 }}>Hakkımızda</Title>
+        <div style={{ maxWidth: 600, margin: '0 auto', color: '#333', fontSize: 16 }}>
+          <b>GlassBazaar</b> el yapımı ve modern cam ürünlerinde Türkiye'nin öncü pazar yeridir. Kaliteli, özgün ve şık cam ürünleriyle evinize değer katıyoruz.<br /><br />
+          <span style={{ color: '#1976d2', fontWeight: 600 }}>Yaza Özel: Tüm ürünlerde %20 indirim!</span>
+        </div>
+      </div>
     </div>
   );
 }
