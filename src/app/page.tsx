@@ -129,7 +129,13 @@ export default function Home() {
           {categoryFirstProducts.map((product, idx) => (
             product ? (
               <div key={product.Id}>
-                <div className={styles.carouselCard}>
+                <div
+                  className={styles.carouselCard}
+                  style={{
+                    background: isDark ? '#ff9800' : '#e3f2fd',
+                    color: isDark ? '#fff' : '#171717',
+                  }}
+                >
                   <div className={styles.carouselImageBox}>
                     <img src={product.Image} alt={product.Name} className={styles.carouselImage} />
                   </div>
