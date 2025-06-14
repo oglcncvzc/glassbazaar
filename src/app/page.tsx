@@ -142,7 +142,8 @@ export default function Home() {
                   <div className={styles.carouselContent}>
                     <div className={styles.carouselTitle}>{product.Category} Fırsatları</div>
                     <div className={styles.carouselSub}>Şimdi %25'e varan indirim!</div>
-                    <div className={styles.carouselDesc}>{product.Name} ve daha fazlası seni bekliyor. Sadece bu haftaya özel kampanya!</div>
+                    {screen.width > 768 ?  (
+                    <div className={styles.carouselDesc}>{product.Name} ve daha fazlası seni bekliyor. Sadece bu haftaya özel kampanya!</div> ) : null }
                     <Button type="primary" size="large" onClick={() => router.push(`/products?category=${encodeURIComponent(product.Category)}`)}>
                       Fırsatları Gör
                     </Button>

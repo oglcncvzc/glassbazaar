@@ -36,6 +36,7 @@ body.theme-light {
 body.theme-dark .ant-card, body.theme-dark .ant-card-bordered, body.theme-dark .ant-card-body {
   background: #181818 !important;
   color: #ededed !important;
+  border-color: #222 !important;
 }
 body.theme-dark .ant-btn-primary {
   background: #222 !important;
