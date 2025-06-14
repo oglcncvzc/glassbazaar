@@ -251,7 +251,7 @@ export default function RootLayout({
                       isCartOpen={isCartOpen}
                       MiniCartDrawer={MiniCartDrawer}
                     />
-                    <Button type="text" onClick={toggleTheme} style={{  color: iconColor, height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined }}>
+                    <Button type="text" shape="circle" onClick={toggleTheme} style={{  color: iconColor, height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined }}>
                       {clientTheme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
                     </Button>
                     {clientIsLoggedIn && (
