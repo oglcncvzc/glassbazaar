@@ -4,9 +4,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, createContext, useContext, useRef } from 'react';
-import { Button, Layout, Input } from 'antd';
+import { Button, Layout, Input, Badge } from 'antd';
 import { ProductProvider } from '../data/ProductContext';
-import { CartProvider } from '../data/CartContext';
+import { CartProvider, useCart } from '../data/CartContext';
 import { ShoppingCartOutlined, SearchOutlined, LogoutOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import MiniCartDrawer from './MiniCartDrawer';
@@ -25,6 +25,49 @@ const geistMono = Geist_Mono({
 
 // Search context
 export const SearchContext = createContext({ search: '', setSearch: (_: string) => {} });
+
+function CartButtonWithBadge({
+  windowWidth,
+  iconBg,
+  iconColor,
+  cartButtonRef,
+  setIsCartOpen,
+  isCartOpen,
+  MiniCartDrawer
+}: {
+  windowWidth: number,
+  iconBg: string,
+  iconColor: string,
+  cartButtonRef: React.RefObject<HTMLDivElement | null>,
+  setIsCartOpen: (open: boolean) => void,
+  isCartOpen: boolean,
+  MiniCartDrawer: any
+}) {
+  const { cart } = useCart();
+  const cartCount = cart && Array.isArray(cart) ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
+  return (
+    <>
+      <div ref={cartButtonRef}>
+        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: '#1677ff', color: '#fff' }}>
+          <Button 
+            shape="circle" 
+            icon={<ShoppingCartOutlined style={{ fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : 20, color: iconColor }} />} 
+            size={windowWidth < 600 ? 'small' : windowWidth < 768 ? 'middle' : 'large'} 
+            style={{ background: iconBg, border: '1px solid #eee', height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setIsCartOpen(true)}
+          />
+        </Badge>
+      </div>
+      <MiniCartDrawer 
+        open={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        anchorRef={cartButtonRef}
+        windowWidth={windowWidth}
+        cartCount={cartCount}
+      />
+    </>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -61,7 +104,7 @@ export default function RootLayout({
   const [search, setSearch] = useState('');
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const cartButtonRef = useRef<HTMLDivElement>(null);
+  const cartButtonRef = useRef<HTMLDivElement | null>(null);
 
   // Tema değiştirici fonksiyon
   const toggleTheme = () => {
@@ -175,20 +218,14 @@ export default function RootLayout({
                   </div>
                   {/* Sağ aksiyonlar */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: windowWidth < 600 ? 2 : windowWidth < 768 ? 4 : 10 }}>
-                    <div ref={cartButtonRef}>
-                      <Button 
-                        shape="circle" 
-                        icon={<ShoppingCartOutlined style={{ fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : 20, color: iconColor }} />} 
-                        size={windowWidth < 600 ? 'small' : windowWidth < 768 ? 'middle' : 'large'} 
-                        style={{ background: iconBg, border: '1px solid #eee', height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        onClick={() => setIsCartOpen(true)}
-                      />
-                    </div>
-                    <MiniCartDrawer 
-                      open={isCartOpen} 
-                      onClose={() => setIsCartOpen(false)} 
-                      anchorRef={cartButtonRef}
+                    <CartButtonWithBadge
                       windowWidth={windowWidth}
+                      iconBg={iconBg}
+                      iconColor={iconColor}
+                      cartButtonRef={cartButtonRef}
+                      setIsCartOpen={setIsCartOpen}
+                      isCartOpen={isCartOpen}
+                      MiniCartDrawer={MiniCartDrawer}
                     />
                     <Button onClick={toggleTheme} style={{ background: iconBg, color: iconColor, border: '1px solid #eee', height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined }}>
                       {clientTheme === 'dark' ? '☀️' : '🌙'}

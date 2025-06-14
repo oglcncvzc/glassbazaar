@@ -8,12 +8,14 @@ export default function MiniCartDrawer({
   open, 
   onClose, 
   anchorRef,
-  windowWidth 
+  windowWidth,
+  cartCount
 }: { 
   open: boolean, 
   onClose: () => void, 
   anchorRef: React.RefObject<HTMLDivElement | null>,
-  windowWidth: number 
+  windowWidth: number,
+  cartCount?: number
 }) {
   const { cart, increaseQty, decreaseQty } = useCart();
   const { products } = useProducts();
