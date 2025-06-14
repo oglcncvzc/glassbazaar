@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
-import { Card, Typography, Row, Col, Breadcrumb, Button, Rate } from "antd";
+import { Card, Typography, Row, Col, Breadcrumb, Button, Rate, Spin } from "antd";
 import productsData from "@/data/Glass_Products.json";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -16,23 +16,31 @@ export default function ProductDetail() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const product = productsData.find((p: any) => String(p.Id) === id);
-  if (!product) return notFound();
-
-  
-  const related = productsData
-    .filter((p: any) => p.Id !== product.Id && p.Category === product.Category)
-    .sort((a, b) => Math.abs(b.Rating - product.Rating) - Math.abs(a.Rating - product.Rating))
-    .slice(0, 4);
-
+  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState<any>(null);
+  const [related, setRelated] = useState<any[]>([]);
   const { addToCart } = useCart();
-
   const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
-
   const { t, lang } = useTranslation();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    setLoading(true);
+    setTimeout(() => {
+      const prod = productsData.find((p: any) => String(p.Id) === id);
+      setProduct(prod);
+      if (prod) {
+        const rel = productsData
+          .filter((p: any) => p.Id !== prod.Id && p.Category === prod.Category)
+          .sort((a, b) => Math.abs(b.Rating - prod.Rating) - Math.abs(a.Rating - prod.Rating))
+          .slice(0, 4);
+        setRelated(rel);
+      }
+      setLoading(false);
+    }, 500); // fake loading
+  }, [id]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && product) {
       const key = 'recentlyViewed';
       let viewed: string[] = [];
       try {
@@ -43,7 +51,24 @@ export default function ProductDetail() {
       if (viewed.length > 8) viewed = viewed.slice(0, 8);
       localStorage.setItem(key, JSON.stringify(viewed));
     }
-  }, [id]);
+  }, [id, product]);
+
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: isDark ? '#181818' : '#f5f5f5',
+        transition: 'background 0.3s'
+      }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (!product) return notFound();
 
   return (
     <div style={{ padding: 24 }}>
