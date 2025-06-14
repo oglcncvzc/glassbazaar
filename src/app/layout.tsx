@@ -229,8 +229,8 @@ export default function RootLayout({
                           router.push(`/products?search=${encodeURIComponent(v)}`);
                         }
                       }}
-                      placeholder={t('search_placeholder')}
-                      enterButton={<Button type="primary" style={{ backgroundColor: 'orange', borderColor: 'orange' }}>{t('search')}</Button>}
+                      placeholder={t('Search / Ara')}
+                      enterButton={<Button type="primary" style={{ backgroundColor: 'orange', borderColor: 'orange' }} icon={<SearchOutlined />}></Button>}
                       size={windowWidth < 600 ? 'small' : windowWidth < 768 ? 'middle' : 'large'}
                       style={{
                         width: windowWidth < 600 ? 160 : windowWidth < 768 ? 160 : 260,
@@ -258,8 +258,7 @@ export default function RootLayout({
                       windowWidth < 768 ? (
                         <Button type="text" onClick={handleLogout} style={{ marginRight: 8, height: windowWidth < 600 ? 22 : 32, width: windowWidth < 600 ? 22 : 32, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} icon={<LogoutOutlined style={{ fontSize: windowWidth < 600 ? 12 : 18 }} />} />
                       ) : (
-                        <Button type="primary" onClick={handleLogout} style={{ marginRight: 8, height: 40, fontSize: 15, padding: '0 16px' }}>
-                          {t('logout')}
+                        <Button type="text" shape="circle" icon={<LogoutOutlined />} onClick={handleLogout} style={{ marginRight: 8, height: 40, fontSize: 15, padding: '0 16px' }}>
                         </Button>
                       )
                     )}

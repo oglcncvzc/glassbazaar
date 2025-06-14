@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useEffect, useContext } from "react";
+import React, { useState, useMemo, useEffect, useContext, Suspense } from "react";
 import { Card, Row, Col, Typography, Input, Select, Checkbox, Pagination, Space, Button, Rate, Spin, message } from "antd";
 import productsData from "@/data/Glass_Products.json";
 import Link from "next/link";
@@ -11,10 +11,9 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 const { Title } = Typography;
 const { Option } = Select;
 
-
 const categories = Array.from(new Set(productsData.map((p: any) => p.Category)));
 
-export default function ProductsPage() {
+function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -31,7 +30,6 @@ export default function ProductsPage() {
   const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
   const { t } = useTranslation();
 
-  
   let userEmail = '';
   if (typeof window !== 'undefined') {
     userEmail = localStorage.getItem('userEmail') || '';
@@ -62,7 +60,6 @@ export default function ProductsPage() {
     return filtered;
   }, [search, selectedCategories, inStockOnly, sort]);
 
-  
   const pagedProducts = useMemo(() => {
     const start = (page - 1) * pageSize;
     return filteredProducts.slice(start, start + pageSize);
@@ -125,7 +122,9 @@ export default function ProductsPage() {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0 }}>{t('product_plural')}</div>
+        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>
+          {t('product_plural')}
+        </div>
       </div>
       <Space direction="vertical" size="middle" style={{ width: "100%", marginBottom: 24 }}>
         <Row gutter={[16, 16]}>
@@ -166,7 +165,7 @@ export default function ProductsPage() {
           </Col>
           <Col xs={24} sm={12} md={6} style={{ display: "flex", alignItems: "center" }}>
             <Checkbox checked={inStockOnly} onChange={e => { setInStockOnly(e.target.checked); setPage(1); }}>
-              {t('only_in_stock')}
+              <span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('only_in_stock')}</span>
             </Checkbox>
           </Col>
         </Row>
@@ -230,5 +229,13 @@ export default function ProductsPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function ProductsPageWrapper() {
+  return (
+    <Suspense fallback={<div>Yükleniyor...</div>}>
+      <ProductsPage />
+    </Suspense>
   );
 } 
