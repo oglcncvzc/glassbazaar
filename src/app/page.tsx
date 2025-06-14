@@ -132,8 +132,8 @@ export default function Home() {
                 <div
                   className={styles.carouselCard}
                   style={{
-                    background: isDark ? '#ff9800' : '#e3f2fd',
-                    color: isDark ? '#fff' : '#171717',
+                    background:  'linear-gradient(135deg, #00cba9 0%, #3a8dde 50%, #7c2cff 100%)',
+                    color: isDark ? '#fff' : '#fff',
                   }}
                 >
                   <div className={styles.carouselImageBox}>
