@@ -12,25 +12,6 @@ import MiniCartDropdown from './MiniCartDrawer';
 
 const { Title } = Typography;
 
-const carouselArrowStyle = {
-  position: 'absolute' as const,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  zIndex: 2,
-  width: 64,
-  height: 64,
-  borderRadius: '50%',
-  background: 'rgba(0,0,0,0.18)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 48,
-  color: '#fff',
-  border: 'none',
-  cursor: 'pointer',
-  opacity: 0,
-  transition: 'opacity 0.3s, background 0.3s',
-};
 
 export default function Home() {
   const router = useRouter();
@@ -60,6 +41,19 @@ export default function Home() {
         }
       } catch {}
       setIsDark(document.body.classList.contains('theme-dark'));
+
+      // Tema değişimini dinle (storage ve body class değişimi)
+      const handleThemeChange = () => {
+        setIsDark(document.body.classList.contains('theme-dark'));
+      };
+      window.addEventListener('storage', handleThemeChange);
+      // MutationObserver ile body class değişimini dinle
+      const observer = new MutationObserver(handleThemeChange);
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      return () => {
+        window.removeEventListener('storage', handleThemeChange);
+        observer.disconnect();
+      };
     }
   }, [router, products]);
 

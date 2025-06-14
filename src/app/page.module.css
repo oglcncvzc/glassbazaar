@@ -2,7 +2,8 @@
 .carouselCard {
   display: flex;
   align-items: center;
-  background: #e3f2fd;
+  background: var(--carousel-bg, #e3f2fd);
+  color: var(--carousel-color, #171717);
   border-radius: 32px;
   padding: 40px;
   max-width: 1600px;
@@ -12,6 +13,22 @@
   flex-direction: row;
   justify-content: flex-start;
   text-align: left;
+}
+body.theme-dark .carouselCard {
+  background: #ff9800 !important; /* turuncumsu */
+  color: #fff !important;
+}
+body.theme-dark .carouselTitle {
+  color: #fff !important;
+}
+body.theme-dark .carouselSub {
+  color: #fffde7 !important;
+}
+body.theme-dark .carouselDesc {
+  color: #fff3e0 !important;
+}
+body.theme-dark .carouselImageBox {
+  background: #222 !important;
 }
 
 .carouselImageBox {
@@ -53,6 +70,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+body.theme-dark .carouselTitle {
+  color: #fff !important;
+}
 
 .carouselSub {
   font-size: 20px;
@@ -62,6 +82,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+body.theme-dark .carouselSub {
+  color: #fffde7 !important;
 }
 
 .carouselDesc {
@@ -74,6 +97,9 @@
   white-space: normal;
   max-height: 48px;
   line-height: 24px;
+}
+body.theme-dark .carouselDesc {
+  color: #fff3e0 !important;
 }
 
 .pageRoot {
