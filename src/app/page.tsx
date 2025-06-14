@@ -110,7 +110,7 @@ export default function Home() {
         </div>
         <Title level={1} style={{ margin: 0, fontWeight: 800, fontSize: 40, textAlign: 'center' }}>Welcome to GlassBazaar</Title>
         <div style={{ fontSize: 20, color: heroSubColor, marginBottom: 8, textAlign: 'center' }}>Discover Unique Glassware</div>
-        <Button type="primary" size="large" style={{ marginTop: 8 }}>Shop Now</Button>
+        <Button onClick={() => router.push('/products')} type="primary" size="large" style={{ marginTop: 8 }}>Shop Now</Button>
       </div>
       {/* Banner Carousel */}
       <div

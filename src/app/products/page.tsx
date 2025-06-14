@@ -21,7 +21,7 @@ export default function ProductsPage() {
   const initialCategory = searchParams.get('category');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategory ? [initialCategory] : []);
   const [inStockOnly, setInStockOnly] = useState(true);
-  const [sort, setSort] = useState<string>("");
+  const [sort, setSort] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const { addToCart } = useCart();
