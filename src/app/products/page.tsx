@@ -181,20 +181,20 @@ export default function ProductsPage() {
             <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
               <Link href={`/products/${product.Id}`} style={{ textDecoration: "none" }}>
                 <Card
+                style={{height:450, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}
                   hoverable
                   className="card-fade-in"
-                  style={{ height: 450, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
                   cover={<img alt={product.Name} src={product.Image} style={{ height: 200, objectFit: "cover" }} />}
                 >
                   <Card.Meta
-                    title={<span style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.Name}</span>}
+                    title={product.Name}
                     description={
                       <>
                         <div>{t('price')}: {product.Price} ₺</div>
                         <div>{t('stock')}: {product.InStock ? t('available') : t('out_of_stock')}</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                           <span>{t('rating')}:</span>
-                          <Rate allowHalf disabled value={product.Rating} />
+                          <Rate style={{fontSize:14}} allowHalf disabled value={product.Rating} />
                           <span style={{ marginLeft: 4 }}>({product.Rating})</span>
                         </div>
                         {/* Add to Cart button */}
