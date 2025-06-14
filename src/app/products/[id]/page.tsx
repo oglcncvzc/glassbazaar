@@ -79,7 +79,7 @@ export default function ProductDetail() {
               disabled={!product.InStock}
               onClick={() => {
                 addToCart(product);
-                message.success(t('product_added_to_cart'));
+                message.success({ content: t('product_added_to_cart'), key: `add-to-cart-${product.Id}` });
               }}
             >
               {t('add_to_cart')}
@@ -122,7 +122,7 @@ export default function ProductDetail() {
                           onClick={e => {
                             e.preventDefault();
                             addToCart(rel);
-                            message.success(t('product_added_to_cart'));
+                            message.success({ content: t('product_added_to_cart'), key: `add-to-cart-${rel.Id}` });
                           }}
                           disabled={!rel.InStock}
                         >

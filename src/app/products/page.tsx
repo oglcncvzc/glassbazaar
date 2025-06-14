@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo, useEffect, useContext } from "react";
-import { Card, Row, Col, Typography, Input, Select, Checkbox, Pagination, Space, Button, Rate, Spin } from "antd";
+import { Card, Row, Col, Typography, Input, Select, Checkbox, Pagination, Space, Button, Rate, Spin, message } from "antd";
 import productsData from "@/data/Glass_Products.json";
 import Link from "next/link";
 import { useCart } from '@/data/CartContext';
@@ -183,10 +183,11 @@ export default function ProductsPage() {
                 <Card
                   hoverable
                   className="card-fade-in"
+                  style={{ height: 450, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
                   cover={<img alt={product.Name} src={product.Image} style={{ height: 200, objectFit: "cover" }} />}
                 >
                   <Card.Meta
-                    title={product.Name}
+                    title={<span style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.Name}</span>}
                     description={
                       <>
                         <div>{t('price')}: {product.Price} ₺</div>
@@ -204,6 +205,7 @@ export default function ProductsPage() {
                           onClick={e => {
                             e.preventDefault();
                             addToCart(product);
+                            message.success({ content: t('product_added_to_cart'), key: `add-to-cart-${product.Id}` });
                           }}
                           disabled={!product.InStock}
                         >

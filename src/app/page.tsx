@@ -3,7 +3,7 @@ import { useEffect, useState, useContext, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/data/ProductContext";
 import { useCart } from "@/data/CartContext";
-import { Typography, Button, Row, Col, Card, Badge, Carousel, Spin, Rate } from "antd";
+import { Typography, Button, Row, Col, Card, Badge, Carousel, Spin, Rate, message } from "antd";
 import Link from "next/link";
 import { ShoppingCartOutlined, AppstoreOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { SearchContext, useTranslation } from './layout';
@@ -197,7 +197,7 @@ export default function Home() {
                     type="primary"
                     block
                     style={{ marginTop: 16 }}
-                    onClick={e => { e.preventDefault(); addToCart(product); }}
+                    onClick={e => { e.preventDefault(); addToCart(product); message.success({ content: t('product_added_to_cart'), key: `add-to-cart-${product.Id}` }); }}
                     disabled={!product.InStock}
                   >
                     Add to Cart
