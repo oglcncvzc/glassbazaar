@@ -191,7 +191,7 @@ export default function RootLayout({
                 }}>
                   {/* Logo ve isim */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: windowWidth < 600 ? 4 : windowWidth < 768 ? 8 : 16 }}>
-                    <span className="logo-text" style={{ fontWeight: 700, letterSpacing: 1, color: headerColor, fontSize: windowWidth < 600 ? 15 : windowWidth < 768 ? 20 : undefined }}>
+                    <span className="logo-text" style={{ fontWeight: 700, letterSpacing: 1, color: headerColor, fontSize: windowWidth < 600 ? 15 : windowWidth < 768 ? 20 : undefined, cursor: 'pointer' }} onClick={() => router.push('/') }>
                       GlassBazaar
                     </span>
                   </div>
