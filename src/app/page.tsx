@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/data/ProductContext";
 import { useCart } from "@/data/CartContext";
@@ -7,6 +7,8 @@ import { Typography, Button, Row, Col, Card, Badge, Carousel, Spin } from "antd"
 import Link from "next/link";
 import { ShoppingCartOutlined, AppstoreOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { SearchContext } from './layout';
+import styles from './page.module.css';
+import MiniCartDropdown from './MiniCartDrawer';
 
 const { Title } = Typography;
 
@@ -41,6 +43,8 @@ export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showArrows, setShowArrows] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartButtonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -104,7 +108,7 @@ export default function Home() {
   const categoryFirstProducts = categories.map(cat => products.find(p => p.Category === cat)).filter(Boolean).slice(0, 3);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'inherit' }}>
+    <div className={styles.pageRoot}>
       {/* Hero alanı */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '32px 0 24px 0', minHeight: 180 }}>
         <div className="welcome-message" style={{ marginBottom: 8, textAlign: 'center', fontSize: 16 }}>
@@ -116,7 +120,7 @@ export default function Home() {
       </div>
       {/* Banner Carousel */}
       <div
-        style={{ width: '100%', maxWidth: '100vw', margin: '0 auto 32px auto', position: 'relative' }}
+        style={{ width: '100%', maxWidth: '100%', margin: '0 auto 32px auto', position: 'relative' }}
         onMouseEnter={() => setShowArrows(true)}
         onMouseLeave={() => setShowArrows(false)}
       >
@@ -131,14 +135,14 @@ export default function Home() {
           {categoryFirstProducts.map((product, idx) => (
             product ? (
               <div key={product.Id}>
-                <div style={{ display: 'flex', alignItems: 'center', background: '#e3f2fd', borderRadius: 32, padding: 40, maxWidth: 1600, margin: '0 auto', minHeight: 260 }}>
-                  <div style={{ background: '#fff', borderRadius: 24, padding: 16, marginRight: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img src={product.Image} alt={product.Name} style={{ height: 140, width: 140, objectFit: 'contain', borderRadius: 16 }} />
+                <div className={styles.carouselCard}>
+                  <div className={styles.carouselImageBox}>
+                    <img src={product.Image} alt={product.Name} className={styles.carouselImage} />
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 32, fontWeight: 700, color: '#1976d2', marginBottom: 8 }}>{product.Category} Fırsatları</div>
-                    <div style={{ fontSize: 20, color: '#d32f2f', fontWeight: 600, marginBottom: 8 }}>Şimdi %25'e varan indirim!</div>
-                    <div style={{ fontSize: 18, color: '#333', marginBottom: 16 }}>{product.Name} ve daha fazlası seni bekliyor. Sadece bu haftaya özel kampanya!</div>
+                  <div className={styles.carouselContent}>
+                    <div className={styles.carouselTitle}>{product.Category} Fırsatları</div>
+                    <div className={styles.carouselSub}>Şimdi %25'e varan indirim!</div>
+                    <div className={styles.carouselDesc}>{product.Name} ve daha fazlası seni bekliyor. Sadece bu haftaya özel kampanya!</div>
                     <Button type="primary" size="large" onClick={() => router.push(`/products?category=${encodeURIComponent(product.Category)}`)}>
                       Fırsatları Gör
                     </Button>
@@ -167,9 +171,7 @@ export default function Home() {
       <div style={{ marginBottom: 32, marginTop: 32 }}>
         <Title level={4} style={{ marginLeft: 8 }}>Hot Deals</Title>
         <Row gutter={[24, 24]} style={{ margin: 0 }}>
-          {hotDeals
-            .filter(product => product.Name.toLowerCase().includes(search.toLowerCase()) || product.Category.toLowerCase().includes(search.toLowerCase()))
-            .map((product) => (
+          {hotDeals.map((product) => (
             <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
               <Link href={`/products/${product.Id}`} style={{ textDecoration: 'none' }}>
                 <Card
@@ -231,7 +233,7 @@ export default function Home() {
       {/* About Us */}
       <div style={{ background: '#e3f2fd', borderRadius: 16, margin: '32px 16px', padding: 32, textAlign: 'center' }}>
         <Title level={5} style={{ marginBottom: 8 }}>Hakkımızda</Title>
-        <div style={{ maxWidth: 600, margin: '0 auto', color: '#333', fontSize: 16 }}>
+        <div style={{ maxWidth: '100%', margin: '0 auto', color: '#333', fontSize: 16 }}>
           <b>GlassBazaar</b> el yapımı ve modern cam ürünlerinde Türkiye'nin öncü pazar yeridir. Kaliteli, özgün ve şık cam ürünleriyle evinize değer katıyoruz.<br /><br />
           <span style={{ color: '#1976d2', fontWeight: 600 }}>Yaza Özel: Tüm ürünlerde %20 indirim!</span>
         </div>

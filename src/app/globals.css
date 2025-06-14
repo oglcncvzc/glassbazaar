@@ -177,3 +177,19 @@ input[type="search"] {
   0% { filter: brightness(1.1) drop-shadow(0 0 8px #ff9800aa); }
   100% { filter: brightness(1.4) drop-shadow(0 0 16px #ff9800); }
 }
+
+.logo-text {
+  font-weight: 700;
+  white-space: nowrap;
+  transition: font-size 0.2s;
+  font-size: clamp(16px, 5vw, 28px);
+}
+
+html, body, #__next {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
