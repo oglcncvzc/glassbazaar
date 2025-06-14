@@ -231,9 +231,9 @@ export default function Home() {
         </div>
       )}
       {/* About Us */}
-      <div style={{ background: '#e3f2fd', borderRadius: 16, margin: '32px 16px', padding: 32, textAlign: 'center' }}>
+      <div style={{ background: isDark ? '#181818' : '#e3f2fd', borderRadius: 16, margin: '32px 16px', padding: 32, textAlign: 'center' }}>
         <Title level={5} style={{ marginBottom: 8 }}>Hakkımızda</Title>
-        <div style={{ maxWidth: '100%', margin: '0 auto', color: '#333', fontSize: 16 }}>
+        <div style={{ maxWidth: '100%', margin: '0 auto', color: isDark ? '#ededed' : '#333', fontSize: 16 }}>
           <b>GlassBazaar</b> el yapımı ve modern cam ürünlerinde Türkiye'nin öncü pazar yeridir. Kaliteli, özgün ve şık cam ürünleriyle evinize değer katıyoruz.<br /><br />
           <span style={{ color: '#1976d2', fontWeight: 600 }}>Yaza Özel: Tüm ürünlerde %20 indirim!</span>
         </div>
