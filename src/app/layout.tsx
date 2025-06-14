@@ -48,7 +48,7 @@ function CartButtonWithBadge({
   return (
     <>
       <div ref={cartButtonRef}>
-        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: 'transparent', color: 'orange' }} offset={[0, 8]}>
+        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: 'transparent', color: 'orange', border: 'none' }} offset={[0, 8]}>
           <Button 
           type="text"
             shape="circle" 

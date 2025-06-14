@@ -117,6 +117,11 @@ body.theme-dark .ant-select-selection-placeholder {
   color: #888 !important;
   opacity: 1 !important;
 }
+body.theme-dark .ant-badge .ant-badge-count {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
 
 .card-fade-in {
   animation: fadeIn 0.7s ease;
