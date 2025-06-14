@@ -102,7 +102,7 @@ export default function Home() {
   const categoryFirstProducts = categories.map(cat => products.find(p => p.Category === cat)).filter(Boolean).slice(0, 3);
 
   return (
-    <div className={styles.pageRoot}>
+    <div className={styles.pageRoot} style={{ padding: '0 32px' }}>
       {/* Hero alanı */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '32px 0 24px 0', minHeight: 180 }}>
         <div className="welcome-message" style={{ marginBottom: 8, textAlign: 'center', fontSize: 16 }}>
