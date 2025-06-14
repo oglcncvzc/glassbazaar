@@ -3,6 +3,7 @@ import { List, Button, Avatar, message, Drawer, Badge } from 'antd';
 import { useCart } from '../data/CartContext';
 import { useProducts } from '../data/ProductContext';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from './layout';
 
 export default function MiniCartDrawer({ 
   open, 
@@ -21,6 +22,7 @@ export default function MiniCartDrawer({
   const { products } = useProducts();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   // Sadece masaüstünde: Dışarı tıklanınca kapanma
   useEffect(() => {
@@ -44,7 +46,7 @@ export default function MiniCartDrawer({
     // Mobil: Drawer
     return (
       <Drawer
-        title="My Cart"
+        title={t('my_cart')}
         placement="right"
         onClose={onClose}
         open={open}
@@ -87,12 +89,13 @@ export default function MiniCartDrawer({
 
 // Sepet içeriği ortak component
 function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, router }: any) {
+  const { t } = useTranslation();
   return (
     <>
       <List
         itemLayout="horizontal"
         dataSource={cart}
-        locale={{ emptyText: 'Your cart is empty.' }}
+        locale={{ emptyText: t('your_cart_is_empty') }}
         renderItem={(item: any) => {
           const product = products.find((p: any) => p.Id === item.Id);
           const maxQty = product ? product.Stock : 99;
@@ -103,7 +106,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
                 <span>{item.quantity}</span>,
                 <Button size="small" onClick={() => {
                   if (item.quantity < maxQty) increaseQty(item.Id);
-                  else message.warning('No more in stock!');
+                  else message.warning(t('no_more_in_stock'));
                 }} disabled={item.quantity >= maxQty}>+</Button>,
               ]}
             >
@@ -111,8 +114,8 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
                 avatar={<Avatar src={item.Image} shape="square" size={40} />}
                 title={item.Name}
                 description={<>
-                  <div>Price: {item.Price} ₺</div>
-                  <div>Total: {(item.Price * item.quantity).toFixed(2)} ₺</div>
+                  <div>{t('price')}: {item.Price} ₺</div>
+                  <div>{t('total')}: {(item.Price * item.quantity).toFixed(2)} ₺</div>
                 </>}
               />
             </List.Item>
@@ -120,8 +123,8 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
         }}
       />
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 12 }}>
-        <Button block onClick={onClose}>Continue Shopping</Button>
-        <Button type="primary" block onClick={() => { onClose(); router.push('/cart'); }}>Go to Cart</Button>
+        <Button block onClick={onClose}>{t('continue_shopping')}</Button>
+        <Button type="primary" block onClick={() => { onClose(); router.push('/cart'); }}>{t('go_to_cart')}</Button>
       </div>
     </>
   );

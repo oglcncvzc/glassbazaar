@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useCart } from '@/data/CartContext';
 import { message } from 'antd';
+import { useTranslation } from '../../layout';
 
 const { Title, Paragraph } = Typography;
 
@@ -27,6 +28,8 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
 
   const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
+
+  const { t, lang } = useTranslation();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -51,7 +54,7 @@ export default function ProductDetail() {
       <Breadcrumb
         style={{ marginBottom: 16, color: isDark ? '#ededed' : '#171717' }}
         items={[
-          { title: <Link href="/products" style={{ color: isDark ? '#4fa3ff' : undefined }}>Products</Link> },
+          { title: <Link href="/products" style={{ color: isDark ? '#4fa3ff' : undefined }}>{t('product_plural')}</Link> },
           { title: <span style={{ color: isDark ? '#ededed' : '#171717' }}>{product.Name}</span> },
         ]}
       />
@@ -64,22 +67,22 @@ export default function ProductDetail() {
         <Col xs={24} md={14} style={{ display: 'flex', justifyContent: 'center' }}>
           <Card variant="borderless" style={{ marginBottom: 24, width: '100%', maxWidth: 600, minHeight: 360, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Title level={3}>{product.Name}</Title>
-            <Paragraph strong>Price: {product.Price} ₺</Paragraph>
+            <Paragraph strong>{t('price')}: {product.Price} ₺</Paragraph>
             <Paragraph>
-              Rating: <Rate allowHalf disabled value={product.Rating} /> ({product.Rating} / 5)
+              {t('rating')}: <Rate allowHalf disabled value={product.Rating} /> ({product.Rating} / 5)
             </Paragraph>
-            <Paragraph>Stock: {product.InStock ? "Available" : "Out of Stock"}</Paragraph>
-            <Paragraph>Category: {product.Category}</Paragraph>
-            <Paragraph>Brand: {product.Brand}</Paragraph>
+            <Paragraph>{t('stock')}: {product.InStock ? t('available') : t('out_of_stock')}</Paragraph>
+            <Paragraph>{t('categories')}: {product.Category}</Paragraph>
+            <Paragraph>{t('brand')}: {product.Brand}</Paragraph>
             <Button
               type="primary"
               disabled={!product.InStock}
               onClick={() => {
                 addToCart(product);
-                message.success('Product added to cart!');
+                message.success(t('product_added_to_cart'));
               }}
             >
-              Add to Cart
+              {t('add_to_cart')}
             </Button>
           </Card>
         </Col>
@@ -87,10 +90,10 @@ export default function ProductDetail() {
       {/* Alt: Ürün açıklaması tam genişlikte */}
       <Row>
         <Col span={24}>
-          <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>Product Description</span>} variant="borderless" style={{ marginTop: 24, background: isDark ? '#181818' : undefined }}>
+          <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('product_description')}</span>} variant="borderless" style={{ marginTop: 24, background: isDark ? '#181818' : undefined }}>
             <Paragraph>{product.Description}</Paragraph>
             <Paragraph type="secondary" style={{ marginTop: 16 }}>
-              Added Date: {new Date(product.CreatedDate).toLocaleDateString("en-US")}
+              {t('added_date')}: {new Date(product.CreatedDate).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US')}
             </Paragraph>
           </Card>
         </Col>
@@ -98,7 +101,7 @@ export default function ProductDetail() {
       {/* Benzer Ürünler - Alt kısımda tam genişlikte */}
       {related.length > 0 && (
         <div style={{ marginTop: 40 }}>
-          <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>Similar Products</span>} variant="borderless" style={{ width: '100%', background: isDark ? '#181818' : undefined }}>
+          <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('similar_products')}</span>} variant="borderless" style={{ width: '100%', background: isDark ? '#181818' : undefined }}>
             <Row gutter={[16, 16]} justify="start">
               {related.map((rel: any) => (
                 <Col xs={12} sm={8} md={6} key={rel.Id} style={{ display: 'flex' }}>
@@ -110,7 +113,7 @@ export default function ProductDetail() {
                       style={{ height: '100%', minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
                     >
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
-                        <Card.Meta title={rel.Name} description={`Price: ${rel.Price} ₺`} />
+                        <Card.Meta title={rel.Name} description={`${t('price')}: ${rel.Price} ₺`} />
                         <div style={{ flex: 1 }} />
                         <Button
                           type="primary"
@@ -119,11 +122,11 @@ export default function ProductDetail() {
                           onClick={e => {
                             e.preventDefault();
                             addToCart(rel);
-                            message.success('Product added to cart!');
+                            message.success(t('product_added_to_cart'));
                           }}
                           disabled={!rel.InStock}
                         >
-                          Add to Cart
+                          {t('add_to_cart')}
                         </Button>
                       </div>
                     </Card>

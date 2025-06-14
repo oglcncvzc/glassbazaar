@@ -6,7 +6,7 @@ import { useCart } from "@/data/CartContext";
 import { Typography, Button, Row, Col, Card, Badge, Carousel, Spin, Rate } from "antd";
 import Link from "next/link";
 import { ShoppingCartOutlined, AppstoreOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { SearchContext } from './layout';
+import { SearchContext, useTranslation } from './layout';
 import styles from './page.module.css';
 import MiniCartDropdown from './MiniCartDrawer';
 
@@ -26,6 +26,7 @@ export default function Home() {
   const [showArrows, setShowArrows] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const cartButtonRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -106,11 +107,11 @@ export default function Home() {
       {/* Hero alanı */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '32px 0 24px 0', minHeight: 180 }}>
         <div className="welcome-message" style={{ marginBottom: 8, textAlign: 'center', fontSize: 16 }}>
-          <b>Welcome{userEmail ? `, ${userEmail}` : ''}!</b>
+          <b>{t('welcome')}{userEmail ? `, ${userEmail}` : ''}!</b>
         </div>
-        <Title level={1} style={{ margin: 0, fontWeight: 800, fontSize: 40, textAlign: 'center' }}>Welcome to GlassBazaar</Title>
-        <div style={{ fontSize: 20, color: heroSubColor, marginBottom: 8, textAlign: 'center' }}>Discover Unique Glassware</div>
-        <Button onClick={() => router.push('/products')} type="primary" size="large" style={{ marginTop: 8 }}>Shop Now</Button>
+        <Title level={1} style={{ margin: 0, fontWeight: 800, fontSize: 40, textAlign: 'center' }}>{t('welcome_to_glassbazaar')}</Title>
+        <div style={{ fontSize: 20, color: heroSubColor, marginBottom: 8, textAlign: 'center' }}>{t('about_us_text')}</div>
+        <Button onClick={() => router.push('/products')} type="primary" size="large" style={{ marginTop: 8 }}>{t('shop_now')}</Button>
       </div>
       {/* Banner Carousel */}
       <div
@@ -140,12 +141,12 @@ export default function Home() {
                     <img src={product.Image} alt={product.Name} className={styles.carouselImage} />
                   </div>
                   <div className={styles.carouselContent}>
-                    <div className={styles.carouselTitle}>{product.Category} Deals</div>
-                    <div className={styles.carouselSub}>Up to 25% off now!</div>
+                    <div className={styles.carouselTitle}>{product.Category} {t('deals')}</div>
+                    <div className={styles.carouselSub}>{t('up_to_25_off_now')}</div>
                     {screen.width > 768 ?  (
-                    <div className={styles.carouselDesc}>{product.Name} and more are waiting for you. Special campaign only this week!</div> ) : null }
+                    <div className={styles.carouselDesc}>{t('special_campaign_text')}</div> ) : null }
                     <Button type="primary" size="large" onClick={() => router.push(`/products?category=${encodeURIComponent(product.Category)}`)}>
-                      View Deals
+                      {t('view_deals')}
                     </Button>
                   </div>
                 </div>
@@ -156,7 +157,7 @@ export default function Home() {
       </div>
       {/* Kategoriler yatay scroll görsel kartlar */}
       <div style={{ margin: '32px 0 24px 0' }}>
-        <Title level={4} style={{ marginLeft: 8 }}>Categories</Title>
+        <Title level={4} style={{ marginLeft: 8 }}>{t('categories')}</Title>
         <div style={{ display: 'flex', overflowX: 'auto', gap: 20, padding: '8px 0 8px 8px' }}>
           {categories.map((cat, idx) => (
             <Link key={cat + '-' + idx} href={`/products?category=${encodeURIComponent(cat)}`} style={{ textDecoration: 'none' }}>
@@ -170,7 +171,7 @@ export default function Home() {
       </div>
       {/* Hot Deals / Öne Çıkan Ürünler */}
       <div style={{ marginBottom: 32, marginTop: 32 }}>
-        <Title level={4} style={{ marginLeft: 8 }}>Hot Deals</Title>
+        <Title level={4} style={{ marginLeft: 8 }}>{t('hot_deals')}</Title>
         <Row gutter={[24, 24]} style={{ margin: 0 }}>
           {hotDeals.map((product) => (
             <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
@@ -184,9 +185,9 @@ export default function Home() {
                   <Card.Meta
                     title={<span style={{ fontWeight: 700 }}>{product.Name}</span>}
                     description={<>
-                      <div>Price: {product.Price} ₺</div>
+                      <div>{t('price')}: {product.Price} ₺</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
-                        <span>Rating:</span>
+                        <span>{t('rating')}:</span>
                         <Rate allowHalf disabled value={product.Rating} style={{ fontSize: 14, marginLeft: 4, marginRight: 4 }} />
                         <span>{product.Rating}</span>
                       </div>
@@ -210,7 +211,7 @@ export default function Home() {
       {/* Son Görüntülenenler */}
       {recentlyViewed.length > 0 && (
         <div style={{ marginBottom: 32 }}>
-          <Title level={4} style={{ marginLeft: 8 }}>Recently Viewed</Title>
+          <Title level={4} style={{ marginLeft: 8 }}>{t('recently_viewed')}</Title>
           <Row gutter={[24, 24]} style={{ margin: 0 }}>
             {recentlyViewed.map((product) => (
               <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
@@ -224,9 +225,9 @@ export default function Home() {
                     <Card.Meta
                       title={<span style={{ fontWeight: 700 }}>{product.Name}</span>}
                       description={<>
-                        <div>Price: {product.Price} ₺</div>
+                        <div>{t('price')}: {product.Price} ₺</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
-                          <span>Rating:</span>
+                          <span>{t('rating')}:</span>
                           <Rate allowHalf disabled value={product.Rating} style={{ fontSize: 14, marginLeft: 4, marginRight: 4 }} />
                           <span>{product.Rating}</span>
                         </div>
@@ -241,10 +242,10 @@ export default function Home() {
       )}
       {/* About Us */}
       <div style={{ background: isDark ? '#181818' : '#e3f2fd', borderRadius: 16, margin: '32px 16px', padding: 32, textAlign: 'center' }}>
-        <Title level={5} style={{ marginBottom: 8 }}>About Us</Title>
+        <Title level={5} style={{ marginBottom: 8 }}>{t('about_us')}</Title>
         <div style={{ maxWidth: '100%', margin: '0 auto', color: isDark ? '#ededed' : '#333', fontSize: 16 }}>
-          <b>GlassBazaar</b> is Turkey's leading marketplace for handmade and modern glass products. We add value to your home with quality, unique and stylish glass products.<br /><br />
-          <span style={{ color: '#1976d2', fontWeight: 600 }}>Summer Special: 20% off on all products!</span>
+          <b>GlassBazaar</b> {t('about_us_text')}<br /><br />
+          <span style={{ color: '#1976d2', fontWeight: 600 }}>{t('summer_special')}</span>
         </div>
       </div>
     </div>

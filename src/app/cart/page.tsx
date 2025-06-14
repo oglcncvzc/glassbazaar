@@ -4,7 +4,7 @@ import { Typography, Table, Button, InputNumber, Row, Col, Card, Empty, message,
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useContext } from 'react';
-import { SearchContext } from '../layout';
+import { SearchContext, useTranslation } from '../layout';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
@@ -15,6 +15,7 @@ export default function CartPage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const { search } = useContext(SearchContext);
   const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
+  const { t } = useTranslation();
 
   const total = cart.reduce((sum, item) => sum + item.Price * item.quantity, 0);
 
@@ -36,7 +37,7 @@ export default function CartPage() {
 
   const columns = [
     {
-      title: "Product",
+      title: t('product'),
       dataIndex: "Name",
       key: "Name",
       render: (_: any, record: any) => (
@@ -51,13 +52,13 @@ export default function CartPage() {
       ),
     },
     {
-      title: "Price",
+      title: t('price'),
       dataIndex: "Price",
       key: "Price",
       render: (price: number) => `${price} ₺`,
     },
     {
-      title: "Quantity",
+      title: t('quantity'),
       dataIndex: "quantity",
       key: "quantity",
       render: (_: any, record: any) => (
@@ -75,7 +76,7 @@ export default function CartPage() {
       ),
     },
     {
-      title: "Total",
+      title: t('total'),
       key: "total",
       render: (_: any, record: any) => `${(record.Price * record.quantity).toFixed(2)} ₺`,
     },
@@ -83,7 +84,7 @@ export default function CartPage() {
       title: "",
       key: "actions",
       render: (_: any, record: any) => (
-        <Button danger onClick={() => removeFromCart(record.Id)}>Remove</Button>
+        <Button danger onClick={() => removeFromCart(record.Id)}>{t('remove')}</Button>
       ),
     },
   ];
@@ -107,10 +108,10 @@ export default function CartPage() {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>My Cart</div>
+        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>{t('my_cart')}</div>
       </div>
       {cart.length === 0 ? (
-        <Empty description="Your cart is empty." style={{ margin: 48 }} />
+        <Empty description={t('your_cart_is_empty')} style={{ margin: 48 }} />
       ) : (
         <>
           <Table
@@ -123,12 +124,12 @@ export default function CartPage() {
           />
           <Card style={{ maxWidth: 400, margin: "0 auto" }}>
             <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 12 }}>
-              Total: {total.toFixed(2)} ₺
+              {t('total')}: {total.toFixed(2)} ₺
             </div>
             <Row gutter={12}>
               <Col span={12}>
                 <Link href="/products">
-                  <Button block>Continue Shopping</Button>
+                  <Button block>{t('continue_shopping')}</Button>
                 </Link>
               </Col>
               <Col span={12}>
@@ -136,11 +137,11 @@ export default function CartPage() {
                   type="primary"
                   block
                   onClick={() => {
-                    message.success("Purchase simulated!");
+                    message.success(t('purchase_simulated'));
                     clearCart();
                   }}
                 >
-                  Buy Now
+                  {t('buy_now')}
                 </Button>
               </Col>
             </Row>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Form, Input, Button, Typography, Alert } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { useTranslation } from '../layout';
 
 const { Title } = Typography;
 
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const onFinish = (values: any) => {
     setLoading(true);
@@ -27,7 +29,7 @@ export default function LoginPage() {
       }
       router.push("/");
     } else {
-      setError("Invalid email or password!");
+      setError(t('invalid_email_or_password'));
     }
     setLoading(false);
   };
@@ -35,7 +37,7 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f0f2f5" }}>
       <div style={{ width: 350, padding: 32, background: "#fff", borderRadius: 8, boxShadow: "0 2px 8px #f0f1f2" }}>
-        <Title level={3} style={{ textAlign: "center" }}>GlassBazaar Login</Title>
+        <Title level={3} style={{ textAlign: "center" }}>GlassBazaar {t('login')}</Title>
         {error && <Alert message={error} type="error" showIcon style={{ marginBottom: 16 }} />}
         <Form
           name="login"
@@ -45,24 +47,24 @@ export default function LoginPage() {
         >
           <Form.Item
             name="email"
-            label="Email"
+            label={t('email')}
             rules={[
-              { required: true, message: "Please enter your email!" },
-              { type: "email", message: "Please enter a valid email address!" },
+              { required: true, message: t('please_enter_email') },
+              { type: "email", message: t('please_enter_valid_email') },
             ]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Email" size="large" />
+            <Input prefix={<UserOutlined />} placeholder={t('email')} size="large" />
           </Form.Item>
           <Form.Item
             name="password"
-            label="Password"
-            rules={[{ required: true, message: "Please enter your password!" }]}
+            label={t('password')}
+            rules={[{ required: true, message: t('please_enter_password') }]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Password" size="large" />
+            <Input.Password prefix={<LockOutlined />} placeholder={t('password')} size="large" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block size="large" loading={loading}>
-              Login
+              {t('login')}
             </Button>
           </Form.Item>
         </Form>

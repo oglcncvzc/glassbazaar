@@ -5,7 +5,7 @@ import productsData from "@/data/Glass_Products.json";
 import Link from "next/link";
 import { useCart } from '@/data/CartContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { SearchContext } from '../layout';
+import { SearchContext, useTranslation } from '../layout';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
@@ -29,6 +29,7 @@ export default function ProductsPage() {
   const [initialLoading, setInitialLoading] = useState(true);
   const { search: globalSearch } = useContext(SearchContext);
   const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
+  const { t } = useTranslation();
 
   
   let userEmail = '';
@@ -124,14 +125,14 @@ export default function ProductsPage() {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0 }}>Products</div>
+        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0 }}>{t('product_plural')}</div>
       </div>
       <Space direction="vertical" size="middle" style={{ width: "100%", marginBottom: 24 }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} md={6}>
             <Input
               className="search-input"
-              placeholder="Search by product name"
+              placeholder={t('search_by_product_name')}
               value={search}
               onChange={handleSearchChange}
               allowClear
@@ -141,7 +142,7 @@ export default function ProductsPage() {
             <Select
               mode="multiple"
               allowClear
-              placeholder="Select category"
+              placeholder={t('select_category')}
               style={{ width: "100%" }}
               value={selectedCategories}
               onChange={handleCategoryChange}
@@ -153,19 +154,19 @@ export default function ProductsPage() {
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Select
-              placeholder="Sort by price"
+              placeholder={t('sort_by_price')}
               style={{ width: "100%" }}
               value={sort}
               onChange={v => setSort(v)}
               allowClear
             >
-              <Option value="price-asc">Price: Low to High</Option>
-              <Option value="price-desc">Price: High to Low</Option>
+              <Option value="price-asc">{t('price')}: {t('asc')}</Option>
+              <Option value="price-desc">{t('price')}: {t('desc')}</Option>
             </Select>
           </Col>
           <Col xs={24} sm={12} md={6} style={{ display: "flex", alignItems: "center" }}>
             <Checkbox checked={inStockOnly} onChange={e => { setInStockOnly(e.target.checked); setPage(1); }}>
-              Only in stock
+              {t('only_in_stock')}
             </Checkbox>
           </Col>
         </Row>
@@ -188,10 +189,10 @@ export default function ProductsPage() {
                     title={product.Name}
                     description={
                       <>
-                        <div>Price: {product.Price} ₺</div>
-                        <div>Stock: {product.InStock ? "Available" : "Out of Stock"}</div>
+                        <div>{t('price')}: {product.Price} ₺</div>
+                        <div>{t('stock')}: {product.InStock ? t('available') : t('out_of_stock')}</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span>Rating:</span>
+                          <span>{t('rating')}:</span>
                           <Rate allowHalf disabled value={product.Rating} />
                           <span style={{ marginLeft: 4 }}>({product.Rating})</span>
                         </div>
@@ -206,7 +207,7 @@ export default function ProductsPage() {
                           }}
                           disabled={!product.InStock}
                         >
-                          Add to Cart
+                          {t('add_to_cart')}
                         </Button>
                       </>
                     }
