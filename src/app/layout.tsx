@@ -143,6 +143,7 @@ export default function RootLayout({
                   top: 0,
                   zIndex: 100,
                   overflowX: 'hidden',
+                  overflow: 'visible',
                 }}>
                   {/* Logo ve isim */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: windowWidth < 600 ? 4 : windowWidth < 768 ? 8 : 16 }}>

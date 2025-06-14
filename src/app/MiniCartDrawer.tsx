@@ -18,29 +18,81 @@ export default function MiniCartDrawer({
   const { cart, increaseQty, decreaseQty } = useCart();
   const { products } = useProducts();
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Sadece masaüstünde: Dışarı tıklanınca kapanma
+  useEffect(() => {
+    if (windowWidth < 600) return;
+    function handleClick(e: MouseEvent) {
+      if (
+        open &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node) &&
+        anchorRef.current &&
+        !anchorRef.current.contains(e.target as Node)
+      ) {
+        onClose();
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open, onClose, anchorRef, windowWidth]);
+
+  if (windowWidth < 600) {
+    // Mobil: Drawer
+    return (
+      <Drawer
+        title="Sepetim"
+        placement="right"
+        onClose={onClose}
+        open={open}
+        width="100%"
+        styles={{
+          body: {
+            padding: '12px',
+          },
+          header: {
+            padding: '12px',
+          }
+        }}
+      >
+        <CartListContent cart={cart} products={products} increaseQty={increaseQty} decreaseQty={decreaseQty} onClose={onClose} router={router} />
+      </Drawer>
+    );
+  }
+
+  // Masaüstü: Dropdown
+  if (!open) return null;
   return (
-    <Drawer
-      title="Sepetim"
-      placement="right"
-      onClose={onClose}
-      open={open}
-      width={windowWidth < 600 ? '100%' : 320}
-      styles={{
-        body: {
-          padding: '12px',
-        },
-        header: {
-          padding: '12px',
-        }
+    <div
+      ref={dropdownRef}
+      style={{
+        position: 'absolute',
+        top: anchorRef.current ? anchorRef.current.getBoundingClientRect().bottom + window.scrollY + 8 : 60,
+        left: anchorRef.current ? anchorRef.current.getBoundingClientRect().left + window.scrollX - 220 + (anchorRef.current.offsetWidth / 2) : 0,
+        width: 320,
+        background: '#fff',
+        boxShadow: '0 4px 24px #0002',
+        borderRadius: 12,
+        zIndex: 99999,
+        padding: 12,
       }}
     >
+      <CartListContent cart={cart} products={products} increaseQty={increaseQty} decreaseQty={decreaseQty} onClose={onClose} router={router} />
+    </div>
+  );
+}
+
+// Sepet içeriği ortak component
+function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, router }: any) {
+  return (
+    <>
       <List
         itemLayout="horizontal"
         dataSource={cart}
         locale={{ emptyText: 'Sepetiniz boş.' }}
-        renderItem={item => {
-          const product = products.find(p => p.Id === item.Id);
+        renderItem={(item: any) => {
+          const product = products.find((p: any) => p.Id === item.Id);
           const maxQty = product ? product.Stock : 99;
           return (
             <List.Item
@@ -69,6 +121,6 @@ export default function MiniCartDrawer({
         <Button block onClick={onClose}>Alışverişe Devam Et</Button>
         <Button type="primary" block onClick={() => { onClose(); router.push('/cart'); }}>Sepete Git</Button>
       </div>
-    </Drawer>
+    </>
   );
 } 
