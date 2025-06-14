@@ -7,7 +7,7 @@ import { useEffect, useState, createContext, useContext, useRef } from 'react';
 import { Button, Layout, Input, Badge } from 'antd';
 import { ProductProvider } from '../data/ProductContext';
 import { CartProvider, useCart } from '../data/CartContext';
-import { ShoppingCartOutlined, SearchOutlined, LogoutOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined, SearchOutlined, LogoutOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import MiniCartDrawer from './MiniCartDrawer';
 
@@ -48,12 +48,13 @@ function CartButtonWithBadge({
   return (
     <>
       <div ref={cartButtonRef}>
-        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: '#1677ff', color: '#fff' }}>
+        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: 'transparent', color: 'orange' }} offset={[0, 8]}>
           <Button 
+          type="text"
             shape="circle" 
             icon={<ShoppingCartOutlined style={{ fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : 20, color: iconColor }} />} 
             size={windowWidth < 600 ? 'small' : windowWidth < 768 ? 'middle' : 'large'} 
-            style={{ background: iconBg, border: '1px solid #eee', height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{  height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             onClick={() => setIsCartOpen(true)}
           />
         </Badge>
@@ -227,14 +228,14 @@ export default function RootLayout({
                       isCartOpen={isCartOpen}
                       MiniCartDrawer={MiniCartDrawer}
                     />
-                    <Button onClick={toggleTheme} style={{ background: iconBg, color: iconColor, border: '1px solid #eee', height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined }}>
-                      {clientTheme === 'dark' ? '☀️' : '🌙'}
+                    <Button type="text" onClick={toggleTheme} style={{  color: iconColor, height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined }}>
+                      {clientTheme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
                     </Button>
                     {clientIsLoggedIn && (
                       windowWidth < 768 ? (
-                        <Button type="primary" onClick={handleLogout} style={{ marginRight: 8, height: windowWidth < 600 ? 22 : 32, width: windowWidth < 600 ? 22 : 32, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} icon={<LogoutOutlined style={{ fontSize: windowWidth < 600 ? 12 : 18 }} />} />
+                        <Button type="text" onClick={handleLogout} style={{ marginRight: 8, height: windowWidth < 600 ? 22 : 32, width: windowWidth < 600 ? 22 : 32, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} icon={<LogoutOutlined style={{ fontSize: windowWidth < 600 ? 12 : 18 }} />} />
                       ) : (
-                        <Button type="primary" onClick={handleLogout} style={{ marginRight: 8, height: 40, fontSize: 15, padding: '0 16px' }}>
+                        <Button type="default" onClick={handleLogout} style={{ marginRight: 8, height: 40, fontSize: 15, padding: '0 16px' }}>
                           Çıkış Yap
                         </Button>
                       )
