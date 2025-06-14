@@ -124,14 +124,14 @@ export default function ProductsPage() {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0 }}>Ürünler</div>
+        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0 }}>Products</div>
       </div>
       <Space direction="vertical" size="middle" style={{ width: "100%", marginBottom: 24 }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} md={6}>
             <Input
               className="search-input"
-              placeholder="Ürün adına göre ara"
+              placeholder="Search by product name"
               value={search}
               onChange={handleSearchChange}
               allowClear
@@ -141,7 +141,7 @@ export default function ProductsPage() {
             <Select
               mode="multiple"
               allowClear
-              placeholder="Kategori seç"
+              placeholder="Select category"
               style={{ width: "100%" }}
               value={selectedCategories}
               onChange={handleCategoryChange}
@@ -153,19 +153,19 @@ export default function ProductsPage() {
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Select
-              placeholder="Fiyata göre sırala"
+              placeholder="Sort by price"
               style={{ width: "100%" }}
               value={sort}
               onChange={v => setSort(v)}
               allowClear
             >
-              <Option value="price-asc">Fiyat: Artan</Option>
-              <Option value="price-desc">Fiyat: Azalan</Option>
+              <Option value="price-asc">Price: Low to High</Option>
+              <Option value="price-desc">Price: High to Low</Option>
             </Select>
           </Col>
           <Col xs={24} sm={12} md={6} style={{ display: "flex", alignItems: "center" }}>
             <Checkbox checked={inStockOnly} onChange={e => { setInStockOnly(e.target.checked); setPage(1); }}>
-              Sadece stokta olanlar
+              Only in stock
             </Checkbox>
           </Col>
         </Row>
@@ -188,14 +188,14 @@ export default function ProductsPage() {
                     title={product.Name}
                     description={
                       <>
-                        <div>Fiyat: {product.Price} ₺</div>
-                        <div>Stok: {product.InStock ? "Var" : "Yok"}</div>
+                        <div>Price: {product.Price} ₺</div>
+                        <div>Stock: {product.InStock ? "Available" : "Out of Stock"}</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span>Puan:</span>
+                          <span>Rating:</span>
                           <Rate allowHalf disabled value={product.Rating} />
                           <span style={{ marginLeft: 4 }}>({product.Rating})</span>
                         </div>
-                        {/* Sepete Ekle butonu */}
+                        {/* Add to Cart button */}
                         <Button
                           type="primary"
                           block
@@ -206,7 +206,7 @@ export default function ProductsPage() {
                           }}
                           disabled={!product.InStock}
                         >
-                          Sepete Ekle
+                          Add to Cart
                         </Button>
                       </>
                     }

@@ -27,7 +27,7 @@ export default function LoginPage() {
       }
       router.push("/");
     } else {
-      setError("E-posta veya şifre hatalı!");
+      setError("Invalid email or password!");
     }
     setLoading(false);
   };
@@ -35,7 +35,7 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f0f2f5" }}>
       <div style={{ width: 350, padding: 32, background: "#fff", borderRadius: 8, boxShadow: "0 2px 8px #f0f1f2" }}>
-        <Title level={3} style={{ textAlign: "center" }}>GlassBazaar Giriş</Title>
+        <Title level={3} style={{ textAlign: "center" }}>GlassBazaar Login</Title>
         {error && <Alert message={error} type="error" showIcon style={{ marginBottom: 16 }} />}
         <Form
           name="login"
@@ -45,24 +45,24 @@ export default function LoginPage() {
         >
           <Form.Item
             name="email"
-            label="E-posta"
+            label="Email"
             rules={[
-              { required: true, message: "Lütfen e-posta adresinizi girin!" },
-              { type: "email", message: "Geçerli bir e-posta adresi girin!" },
+              { required: true, message: "Please enter your email!" },
+              { type: "email", message: "Please enter a valid email address!" },
             ]}
           >
-            <Input prefix={<UserOutlined />} placeholder="E-posta" size="large" />
+            <Input prefix={<UserOutlined />} placeholder="Email" size="large" />
           </Form.Item>
           <Form.Item
             name="password"
-            label="Şifre"
-            rules={[{ required: true, message: "Lütfen şifrenizi girin!" }]}
+            label="Password"
+            rules={[{ required: true, message: "Please enter your password!" }]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Şifre" size="large" />
+            <Input.Password prefix={<LockOutlined />} placeholder="Password" size="large" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block size="large" loading={loading}>
-              Giriş Yap
+              Login
             </Button>
           </Form.Item>
         </Form>

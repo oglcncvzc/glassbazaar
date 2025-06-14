@@ -44,7 +44,7 @@ export default function MiniCartDrawer({
     // Mobil: Drawer
     return (
       <Drawer
-        title="Sepetim"
+        title="My Cart"
         placement="right"
         onClose={onClose}
         open={open}
@@ -92,7 +92,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
       <List
         itemLayout="horizontal"
         dataSource={cart}
-        locale={{ emptyText: 'Sepetiniz boş.' }}
+        locale={{ emptyText: 'Your cart is empty.' }}
         renderItem={(item: any) => {
           const product = products.find((p: any) => p.Id === item.Id);
           const maxQty = product ? product.Stock : 99;
@@ -103,7 +103,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
                 <span>{item.quantity}</span>,
                 <Button size="small" onClick={() => {
                   if (item.quantity < maxQty) increaseQty(item.Id);
-                  else message.warning('Stokta daha fazla yok!');
+                  else message.warning('No more in stock!');
                 }} disabled={item.quantity >= maxQty}>+</Button>,
               ]}
             >
@@ -111,8 +111,8 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
                 avatar={<Avatar src={item.Image} shape="square" size={40} />}
                 title={item.Name}
                 description={<>
-                  <div>Fiyat: {item.Price} ₺</div>
-                  <div>Toplam: {(item.Price * item.quantity).toFixed(2)} ₺</div>
+                  <div>Price: {item.Price} ₺</div>
+                  <div>Total: {(item.Price * item.quantity).toFixed(2)} ₺</div>
                 </>}
               />
             </List.Item>
@@ -120,8 +120,8 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
         }}
       />
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 12 }}>
-        <Button block onClick={onClose}>Alışverişe Devam Et</Button>
-        <Button type="primary" block onClick={() => { onClose(); router.push('/cart'); }}>Sepete Git</Button>
+        <Button block onClick={onClose}>Continue Shopping</Button>
+        <Button type="primary" block onClick={() => { onClose(); router.push('/cart'); }}>Go to Cart</Button>
       </div>
     </>
   );

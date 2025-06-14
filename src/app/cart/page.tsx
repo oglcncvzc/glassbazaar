@@ -36,7 +36,7 @@ export default function CartPage() {
 
   const columns = [
     {
-      title: "Ürün",
+      title: "Product",
       dataIndex: "Name",
       key: "Name",
       render: (_: any, record: any) => (
@@ -51,13 +51,13 @@ export default function CartPage() {
       ),
     },
     {
-      title: "Fiyat",
+      title: "Price",
       dataIndex: "Price",
       key: "Price",
       render: (price: number) => `${price} ₺`,
     },
     {
-      title: "Adet",
+      title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
       render: (_: any, record: any) => (
@@ -75,7 +75,7 @@ export default function CartPage() {
       ),
     },
     {
-      title: "Toplam",
+      title: "Total",
       key: "total",
       render: (_: any, record: any) => `${(record.Price * record.quantity).toFixed(2)} ₺`,
     },
@@ -83,7 +83,7 @@ export default function CartPage() {
       title: "",
       key: "actions",
       render: (_: any, record: any) => (
-        <Button danger onClick={() => removeFromCart(record.Id)}>Kaldır</Button>
+        <Button danger onClick={() => removeFromCart(record.Id)}>Remove</Button>
       ),
     },
   ];
@@ -107,10 +107,10 @@ export default function CartPage() {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>Sepetim</div>
+        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>My Cart</div>
       </div>
       {cart.length === 0 ? (
-        <Empty description="Sepetinizde ürün yok." style={{ margin: 48 }} />
+        <Empty description="Your cart is empty." style={{ margin: 48 }} />
       ) : (
         <>
           <Table
@@ -123,12 +123,12 @@ export default function CartPage() {
           />
           <Card style={{ maxWidth: 400, margin: "0 auto" }}>
             <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 12 }}>
-              Toplam: {total.toFixed(2)} ₺
+              Total: {total.toFixed(2)} ₺
             </div>
             <Row gutter={12}>
               <Col span={12}>
                 <Link href="/products">
-                  <Button block>Alışverişe Devam Et</Button>
+                  <Button block>Continue Shopping</Button>
                 </Link>
               </Col>
               <Col span={12}>
@@ -136,11 +136,11 @@ export default function CartPage() {
                   type="primary"
                   block
                   onClick={() => {
-                    message.success("Satın alma işlemi simüle edildi!");
+                    message.success("Purchase simulated!");
                     clearCart();
                   }}
                 >
-                  Satın Al
+                  Buy Now
                 </Button>
               </Col>
             </Row>
