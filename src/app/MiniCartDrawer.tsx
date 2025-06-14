@@ -4,6 +4,7 @@ import { useCart } from '../data/CartContext';
 import { useProducts } from '../data/ProductContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from './layout';
+import Link from 'next/link';
 
 export default function MiniCartDrawer({ 
   open, 
@@ -117,7 +118,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
             >
               <List.Item.Meta
                 avatar={<Avatar src={item.Image} shape="square" size={40} />}
-                title={item.Name}
+                title={<Link href={`/products/${encodeURIComponent(item.Category)}/${item.Id}`}>{item.Name}</Link>}
                 description={<>
                   <div>{t('price')}: {item.Price} ₺</div>
                   <div>{t('total')}: {(item.Price * item.quantity).toFixed(2)} ₺</div>

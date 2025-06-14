@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useCart } from '@/data/CartContext';
 import { message } from 'antd';
-import { useTranslation } from '../../layout';
+import { useTranslation } from '../../../layout';
 
 const { Title, Paragraph } = Typography;
 
@@ -16,6 +16,7 @@ export default function ProductDetail() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const category = params.category as string;
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<any>(null);
   const [related, setRelated] = useState<any[]>([]);
@@ -26,7 +27,11 @@ export default function ProductDetail() {
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      const prod = productsData.find((p: any) => String(p.Id) === id);
+      const prod = productsData.find((p: any) => String(p.Id) === id && p.Category === category);
+      if (!prod) {
+        router.push('/products');
+        return;
+      }
       setProduct(prod);
       if (prod) {
         const rel = productsData
@@ -36,8 +41,8 @@ export default function ProductDetail() {
         setRelated(rel);
       }
       setLoading(false);
-    }, 500); // fake loading
-  }, [id]);
+    }, 500);
+  }, [id, category, router]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && product) {
@@ -80,15 +85,14 @@ export default function ProductDetail() {
         style={{ marginBottom: 16, color: isDark ? '#ededed' : '#171717' }}
         items={[
           { title: <Link href="/products" style={{ color: isDark ? '#4fa3ff' : undefined }}>{t('product_plural')}</Link> },
+          { title: <Link href={`/products?category=${encodeURIComponent(category)}`} style={{ color: isDark ? '#4fa3ff' : undefined }}>{category}</Link> },
           { title: <span style={{ color: isDark ? '#ededed' : '#171717' }}>{product.Name}</span> },
         ]}
       />
       <Row gutter={[32, 32]} align="middle" style={{ minHeight: 400 }}>
-        {/* Sol: Ürün görseli */}
         <Col xs={24} md={10} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: 16 }}>
           <img alt={product.Name} src={product.Image} style={{ width: '100%', maxWidth: 400, maxHeight: 400, objectFit: 'contain' }} />
         </Col>
-        {/* Sağ: Ürün detayları */}
         <Col xs={24} md={14} style={{ display: 'flex', justifyContent: 'center' }}>
           <Card variant="borderless" style={{ marginBottom: 24, width: '100%', maxWidth: 600, minHeight: 360, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Title level={3}>{product.Name}</Title>
@@ -112,7 +116,6 @@ export default function ProductDetail() {
           </Card>
         </Col>
       </Row>
-      {/* Alt: Ürün açıklaması tam genişlikte */}
       <Row>
         <Col span={24}>
           <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('product_description')}</span>} variant="borderless" style={{ marginTop: 24, background: isDark ? '#181818' : undefined }}>
@@ -123,14 +126,13 @@ export default function ProductDetail() {
           </Card>
         </Col>
       </Row>
-      {/* Benzer Ürünler - Alt kısımda tam genişlikte */}
       {related.length > 0 && (
         <div style={{ marginTop: 40 }}>
           <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('similar_products')}</span>} variant="borderless" style={{ width: '100%', background: isDark ? '#181818' : undefined }}>
             <Row gutter={[16, 16]} justify="start">
               {related.map((rel: any) => (
                 <Col xs={12} sm={8} md={6} key={rel.Id} style={{ display: 'flex' }}>
-                  <Link href={`/products/${rel.Id}`} style={{ width: '100%', height: '100%' }}>
+                  <Link href={`/products/${rel.Category}/${rel.Id}`} style={{ width: '100%', height: '100%' }}>
                     <Card
                       hoverable
                       cover={<img alt={rel.Name} src={rel.Image} style={{ height: 120, objectFit: "cover", width: '100%' }} />}

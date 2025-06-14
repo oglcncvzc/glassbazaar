@@ -178,7 +178,7 @@ function ProductsPage() {
         <Row gutter={[16, 16]}>
           {pagedProducts.map((product: any) => (
             <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
-              <Link href={`/products/${product.Id}`} style={{ textDecoration: "none" }}>
+              <Link href={`/products/${encodeURIComponent(product.Category)}/${product.Id}`} style={{ textDecoration: "none" }}>
                 <Card
                 style={{height:450, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}
                   hoverable

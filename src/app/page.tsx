@@ -175,7 +175,7 @@ export default function Home() {
         <Row gutter={[24, 24]} style={{ margin: 0 }}>
           {hotDeals.map((product) => (
             <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
-              <Link href={`/products/${product.Id}`} style={{ textDecoration: 'none' }}>
+              <Link href={`/products/${encodeURIComponent(product.Category)}/${product.Id}`} style={{ textDecoration: 'none' }}>
                 <Card
                   hoverable
                   className="card-fade-in"
@@ -215,7 +215,7 @@ export default function Home() {
           <Row gutter={[24, 24]} style={{ margin: 0 }}>
             {recentlyViewed.map((product) => (
               <Col xs={24} sm={12} md={8} lg={6} key={product.Id}>
-                <Link href={`/products/${product.Id}`} style={{ textDecoration: 'none' }}>
+                <Link href={`/products/${encodeURIComponent(product.Category)}/${product.Id}`} style={{ textDecoration: 'none' }}>
                   <Card
                     hoverable
                     className="card-fade-in"

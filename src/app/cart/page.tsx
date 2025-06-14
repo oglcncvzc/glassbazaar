@@ -46,7 +46,7 @@ export default function CartPage() {
             <img src={record.Image} alt={record.Name} style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 8 }} />
           </Col>
           <Col>
-            <Link href={`/products/${record.Id}`}>{record.Name}</Link>
+            <Link href={`/products/${encodeURIComponent(record.Category)}/${record.Id}`}>{record.Name}</Link>
           </Col>
         </Row>
       ),
