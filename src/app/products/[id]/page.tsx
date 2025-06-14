@@ -53,12 +53,14 @@ export default function ProductDetail() {
           { title: product.Name },
         ]}
       />
-      <Row gutter={[32, 32]}>
-        <Col xs={24} md={10}>
-          <Card
-            cover={<img alt={product.Name} src={product.Image} style={{ width: "100%", maxHeight: 400, objectFit: "contain" }} />}
-            variant="borderless"
-          >
+      <Row gutter={[32, 32]} align="top">
+        {/* Sol: Ürün görseli */}
+        <Col xs={24} md={10} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: 16 }}>
+          <img alt={product.Name} src={product.Image} style={{ width: '100%', maxWidth: 400, maxHeight: 400, objectFit: 'contain' }} />
+        </Col>
+        {/* Sağ: Ürün detayları */}
+        <Col xs={24} md={14} style={{ display: 'flex', alignItems: 'center', minHeight: 400 }}>
+          <Card variant="borderless" style={{ marginBottom: 24, width: '100%', maxWidth: 600, minHeight: 360, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <Title level={3}>{product.Name}</Title>
             <Paragraph strong>Fiyat: {product.Price} ₺</Paragraph>
             <Paragraph>
@@ -79,29 +81,39 @@ export default function ProductDetail() {
             </Button>
           </Card>
         </Col>
-        <Col xs={24} md={14}>
-          <Card title="Ürün Açıklaması" variant="borderless">
+      </Row>
+      {/* Alt: Ürün açıklaması tam genişlikte */}
+      <Row>
+        <Col span={24}>
+          <Card title="Ürün Açıklaması" variant="borderless" style={{ marginTop: 24 }}>
             <Paragraph>{product.Description}</Paragraph>
             <Paragraph type="secondary" style={{ marginTop: 16 }}>
               Eklenme Tarihi: {new Date(product.CreatedDate).toLocaleDateString("tr-TR")}
             </Paragraph>
           </Card>
-          {related.length > 0 && (
-            <Card title="Benzer Ürünler" style={{ marginTop: 32 }} variant="borderless">
-              <Row gutter={[16, 16]}>
-                {related.map((rel: any) => (
-                  <Col xs={24} sm={12} md={6} key={rel.Id}>
-                    <Link href={`/products/${rel.Id}`}>
-                      <Card
-                        hoverable
-                        cover={<img alt={rel.Name} src={rel.Image} style={{ height: 100, objectFit: "cover" }} />}
-                        variant="borderless"
-                      >
+        </Col>
+      </Row>
+      {/* Benzer Ürünler - Alt kısımda tam genişlikte */}
+      {related.length > 0 && (
+        <div style={{ marginTop: 40 }}>
+          <Card title="Benzer Ürünler" variant="borderless" style={{ width: '100%' }}>
+            <Row gutter={[16, 16]} justify="start">
+              {related.map((rel: any) => (
+                <Col xs={12} sm={8} md={6} key={rel.Id} style={{ display: 'flex' }}>
+                  <Link href={`/products/${rel.Id}`} style={{ width: '100%', height: '100%' }}>
+                    <Card
+                      hoverable
+                      cover={<img alt={rel.Name} src={rel.Image} style={{ height: 120, objectFit: "cover", width: '100%' }} />}
+                      variant="borderless"
+                      style={{ height: '100%', minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                    >
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
                         <Card.Meta title={rel.Name} description={`Fiyat: ${rel.Price} ₺`} />
+                        <div style={{ flex: 1 }} />
                         <Button
                           type="primary"
                           size="small"
-                          style={{ marginTop: 8 }}
+                          style={{ marginTop: 8, width: '100%' }}
                           onClick={e => {
                             e.preventDefault();
                             addToCart(rel);
@@ -111,15 +123,15 @@ export default function ProductDetail() {
                         >
                           Sepete Ekle
                         </Button>
-                      </Card>
-                    </Link>
-                  </Col>
-                ))}
-              </Row>
-            </Card>
-          )}
-        </Col>
-      </Row>
+                      </div>
+                    </Card>
+                  </Link>
+                </Col>
+              ))}
+            </Row>
+          </Card>
+        </div>
+      )}
     </div>
   );
 } 

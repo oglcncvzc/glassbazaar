@@ -190,7 +190,11 @@ export default function ProductsPage() {
                       <>
                         <div>Fiyat: {product.Price} ₺</div>
                         <div>Stok: {product.InStock ? "Var" : "Yok"}</div>
-                        <div>Puan: <Rate allowHalf disabled value={product.Rating} /> ({product.Rating})</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span>Puan:</span>
+                          <Rate allowHalf disabled value={product.Rating} />
+                          <span style={{ marginLeft: 4 }}>({product.Rating})</span>
+                        </div>
                         {/* Sepete Ekle butonu */}
                         <Button
                           type="primary"
