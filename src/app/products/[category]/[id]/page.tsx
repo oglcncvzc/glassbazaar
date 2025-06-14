@@ -98,7 +98,7 @@ export default function ProductDetail() {
             <Title level={3}>{product.Name}</Title>
             <Paragraph strong>{t('price')}: {product.Price} ₺</Paragraph>
             <Paragraph>
-              {t('rating')}: <Rate allowHalf disabled value={product.Rating} /> ({product.Rating} / 5)
+              {t('rating')}: <Rate style={{fontSize:14}} allowHalf disabled value={product.Rating} /> <span style={{marginLeft:8}}>{product.Rating}</span>
             </Paragraph>
             <Paragraph>{t('stock')}: {product.InStock ? t('available') : t('out_of_stock')}</Paragraph>
             <Paragraph>{t('categories')}: {product.Category}</Paragraph>
