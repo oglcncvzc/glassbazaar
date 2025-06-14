@@ -107,7 +107,7 @@ export default function CartPage() {
     <div style={{ padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0 }}>Sepetim</div>
+        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>Sepetim</div>
       </div>
       {cart.length === 0 ? (
         <Empty description="Sepetinizde ürün yok." style={{ margin: 48 }} />

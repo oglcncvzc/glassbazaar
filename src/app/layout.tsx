@@ -48,7 +48,7 @@ function CartButtonWithBadge({
   return (
     <>
       <div ref={cartButtonRef}>
-        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: 'transparent', color: 'orange', border: 'none' }} offset={[0, 8]}>
+        <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: 'transparent', color: 'purple', border: 'none' }} offset={[0, 8]}>
           <Button 
           type="text"
             shape="circle" 
@@ -207,7 +207,8 @@ export default function RootLayout({
                         }
                       }}
                       placeholder="Ürün veya kategori ara..."
-                      enterButton
+                      
+                      enterButton={<Button type="primary" style={{ backgroundColor: 'orange', borderColor: 'orange' }}>Ara</Button>}
                       size={windowWidth < 600 ? 'small' : windowWidth < 768 ? 'middle' : 'large'}
                       style={{
                         width: windowWidth < 600 ? 160 : windowWidth < 768 ? 160 : 260,
@@ -235,7 +236,7 @@ export default function RootLayout({
                       windowWidth < 768 ? (
                         <Button type="text" onClick={handleLogout} style={{ marginRight: 8, height: windowWidth < 600 ? 22 : 32, width: windowWidth < 600 ? 22 : 32, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} icon={<LogoutOutlined style={{ fontSize: windowWidth < 600 ? 12 : 18 }} />} />
                       ) : (
-                        <Button type="default" onClick={handleLogout} style={{ marginRight: 8, height: 40, fontSize: 15, padding: '0 16px' }}>
+                        <Button type="primary" onClick={handleLogout} style={{ marginRight: 8, height: 40, fontSize: 15, padding: '0 16px' }}>
                           Çıkış Yap
                         </Button>
                       )

@@ -198,3 +198,12 @@ html, body, #__next {
   box-sizing: border-box;
   overflow-x: hidden;
 }
+
+body:not(.theme-dark) .ant-btn-primary {
+  background: #a259ff !important;
+  border-color: #a259ff !important;
+}
+body:not(.theme-dark) .ant-btn-primary:hover, body:not(.theme-dark) .ant-btn-primary:focus {
+  background: #7c2cff !important;
+  border-color: #7c2cff !important;
+}
