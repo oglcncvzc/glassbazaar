@@ -38,7 +38,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const decreaseQty = (id: number) => {
-    setCart(prev => prev.map(item => item.Id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
+    setCart(prev => {
+      const found = prev.find(item => item.Id === id);
+      if (found && found.quantity === 1) {
+        return prev.filter(item => item.Id !== id);
+      }
+      return prev.map(item => item.Id === id ? { ...item, quantity: item.quantity - 1 } : item);
+    });
   };
 
   const clearCart = () => setCart([]);

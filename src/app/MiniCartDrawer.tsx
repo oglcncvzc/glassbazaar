@@ -74,7 +74,7 @@ export default function MiniCartDrawer({
         position: 'absolute',
         top: anchorRef.current ? anchorRef.current.getBoundingClientRect().bottom + window.scrollY + 8 : 60,
         left: anchorRef.current ? anchorRef.current.getBoundingClientRect().left + window.scrollX - 220 + (anchorRef.current.offsetWidth / 2) : 0,
-        width: 320,
+        width: 420,
         background: '#fff',
         boxShadow: '0 4px 24px #0002',
         borderRadius: 12,
@@ -102,7 +102,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
           return (
             <List.Item
               actions={[
-                <Button size="small" onClick={() => decreaseQty(item.Id)} disabled={item.quantity <= 1}>-</Button>,
+                <Button size="small" onClick={() => decreaseQty(item.Id)}>-</Button>,
                 <span>{item.quantity}</span>,
                 <Button size="small" onClick={() => {
                   if (item.quantity < maxQty) increaseQty(item.Id);
