@@ -73,7 +73,12 @@ export default function MiniCartDrawer({
       style={{
         position: 'absolute',
         top: anchorRef.current ? anchorRef.current.getBoundingClientRect().bottom + window.scrollY + 8 : 60,
-        left: anchorRef.current ? anchorRef.current.getBoundingClientRect().left + window.scrollX - 220 + (anchorRef.current.offsetWidth / 2) : 0,
+        left: anchorRef.current
+          ? Math.min(
+              anchorRef.current.getBoundingClientRect().left + window.scrollX - 220 + (anchorRef.current.offsetWidth / 2),
+              window.innerWidth - 440 // sağdan 20px boşluk bırak
+            )
+          : 0,
         width: 420,
         background: '#fff',
         boxShadow: '0 4px 24px #0002',
@@ -122,6 +127,12 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
           );
         }}
       />
+      {/* Toplam tutar */}
+      {cart.length > 0 && (
+        <div style={{ fontWeight: 600, fontSize: 16, margin: '12px 0 8px 0', textAlign: 'right' }}>
+          {t('total')}: {cart.reduce((sum: number, item: any) => sum + item.Price * item.quantity, 0).toFixed(2)} ₺
+        </div>
+      )}
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 12 }}>
         <Button block onClick={onClose}>{t('continue_shopping')}</Button>
         <Button type="primary" block onClick={() => { onClose(); router.push('/cart'); }}>{t('go_to_cart')}</Button>
