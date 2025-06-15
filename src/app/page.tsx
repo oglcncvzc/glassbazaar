@@ -103,7 +103,7 @@ export default function Home() {
   const categoryFirstProducts = categories.map(cat => products.find(p => p.Category === cat)).filter(Boolean).slice(0, 3);
 
   return (
-    <div className={styles.pageRoot} style={{ padding: '0 24px' }}>
+    <div className={styles.pageRoot} style={{ padding: screen.width > 768 ? '0 64px' : '0 24px' }}>
       {/* Hero alanı */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '32px 0 24px 0', minHeight: 180 }}>
         <div className="welcome-message" style={{ marginBottom: 8, textAlign: 'center', fontSize: 16 }}>
@@ -200,7 +200,7 @@ export default function Home() {
                     onClick={e => { e.preventDefault(); addToCart(product); message.success({ content: t('product_added_to_cart'), key: `add-to-cart-${product.Id}` }); }}
                     disabled={!product.InStock}
                   >
-                    Add to Cart
+                    {t('add_to_cart')}
                   </Button>
                 </Card>
               </Link>

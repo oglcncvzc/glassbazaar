@@ -214,10 +214,7 @@ export default function RootLayout({
                       GlassBazaar
                     </span>
                   </div>
-                  {/* Dil seçici dropdown */}
-                  <div style={{ marginLeft: 8, marginRight: 8, flexShrink: 0 }}>
-                    <LanguageDropdown lang={lang} onChange={handleLangChange} />
-                  </div>
+
                   {/* Arama barı */}
                   <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
                     <Input.Search
@@ -233,12 +230,16 @@ export default function RootLayout({
                       enterButton={<Button type="primary" style={{ backgroundColor: 'orange', borderColor: 'orange' }} icon={<SearchOutlined />}></Button>}
                       size={windowWidth < 600 ? 'small' : windowWidth < 768 ? 'middle' : 'large'}
                       style={{
-                        width: windowWidth < 600 ? 160 : windowWidth < 768 ? 160 : 260,
+                        width: windowWidth < 600 ? 160 : windowWidth < 768 ? 160 : '100%',
                         maxWidth: '100%',
                         fontSize: windowWidth < 600 ? 11 : windowWidth < 768 ? 13 : 15,
                         height: windowWidth < 600 ? 22 : windowWidth < 768 ? 28 : 38
                       }}
                     />
+                  </div>
+                                    {/* Dil seçici dropdown */}
+                                    <div style={{ marginLeft: 8, marginRight: 8, flexShrink: 0 }}>
+                    <LanguageDropdown lang={lang} onChange={handleLangChange} />
                   </div>
                   {/* Sağ aksiyonlar */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: windowWidth < 600 ? 2 : windowWidth < 768 ? 4 : 10 }}>

@@ -24,6 +24,7 @@ export default function MiniCartDrawer({
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
 
   // Sadece masaüstünde: Dışarı tıklanınca kapanma
   useEffect(() => {
@@ -55,9 +56,12 @@ export default function MiniCartDrawer({
         styles={{
           body: {
             padding: '12px',
+            background: isDark ? '#181818' : '#fff',
           },
           header: {
             padding: '12px',
+            background: isDark ? '#181818' : '#fff',
+            color: isDark ? '#ededed' : undefined,
           }
         }}
       >
@@ -81,11 +85,12 @@ export default function MiniCartDrawer({
             )
           : 0,
         width: 420,
-        background: '#fff',
+        background: isDark ? '#181818' : '#fff',
         boxShadow: '0 4px 24px #0002',
         borderRadius: 12,
         zIndex: 99999,
         padding: 12,
+        color: isDark ? '#ededed' : undefined,
       }}
     >
       <CartListContent cart={cart} products={products} increaseQty={increaseQty} decreaseQty={decreaseQty} onClose={onClose} router={router} />
@@ -96,6 +101,7 @@ export default function MiniCartDrawer({
 // Sepet içeriği ortak component
 function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, router }: any) {
   const { t } = useTranslation();
+  const isDark = typeof window !== 'undefined' && document.body.classList.contains('theme-dark');
   return (
     <>
       <List
@@ -109,7 +115,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
             <List.Item
               actions={[
                 <Button size="small" onClick={() => decreaseQty(item.Id)}>-</Button>,
-                <span>{item.quantity}</span>,
+                <span style={{ color: isDark ? '#ededed' : undefined }}>{item.quantity}</span>,
                 <Button size="small" onClick={() => {
                   if (item.quantity < maxQty) increaseQty(item.Id);
                   else message.warning(t('no_more_in_stock'));
@@ -120,8 +126,8 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
                 avatar={<Avatar src={item.Image} shape="square" size={40} />}
                 title={<Link href={`/products/${encodeURIComponent(item.Category)}/${item.Id}`}>{item.Name}</Link>}
                 description={<>
-                  <div>{t('price')}: {item.Price} ₺</div>
-                  <div>{t('total')}: {(item.Price * item.quantity).toFixed(2)} ₺</div>
+                  <div style={{ color: isDark ? '#ededed' : undefined }}>{t('price')}: {item.Price} ₺</div>
+                  <div style={{ color: isDark ? '#ededed' : undefined }}>{t('total')}: {(item.Price * item.quantity).toFixed(2)} ₺</div>
                 </>}
               />
             </List.Item>
@@ -130,7 +136,7 @@ function CartListContent({ cart, products, increaseQty, decreaseQty, onClose, ro
       />
       {/* Toplam tutar */}
       {cart.length > 0 && (
-        <div style={{ fontWeight: 600, fontSize: 16, margin: '12px 0 8px 0', textAlign: 'right' }}>
+        <div style={{ fontWeight: 600, fontSize: 16, margin: '12px 0 8px 0', textAlign: 'right', color: isDark ? '#ededed' : undefined }}>
           {t('total')}: {cart.reduce((sum: number, item: any) => sum + item.Price * item.quantity, 0).toFixed(2)} ₺
         </div>
       )}
