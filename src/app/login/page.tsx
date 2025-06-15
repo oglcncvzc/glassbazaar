@@ -21,6 +21,15 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (isLoggedIn) {
+        router.replace('/');
+      }
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
       setIsDark(document.body.classList.contains('theme-dark'));
       const handleThemeChange = () => setIsDark(document.body.classList.contains('theme-dark'));
       window.addEventListener('storage', handleThemeChange);
