@@ -35,82 +35,6 @@ export default function CartPage() {
     return () => window.removeEventListener('storage', handleThemeChange);
   }, []);
 
-  const columns = [
-    {
-      title: t('product'),
-      dataIndex: "Name",
-      key: "Name",
-      render: (_: any, record: any) => (
-        <Row gutter={8} align="middle">
-          <Col>
-            <img src={record.Image} alt={record.Name} style={{ width: 60, height: 60, objectFit: "cover", borderRadius: 8 }} />
-          </Col>
-          <Col>
-            <Link href={`/products/${encodeURIComponent(record.Category)}/${record.Id}`}>{record.Name}</Link>
-          </Col>
-        </Row>
-      ),
-    },
-    {
-      title: t('price'),
-      dataIndex: "Price",
-      key: "Price",
-      render: (price: number) => `${price} ₺`,
-    },
-    {
-      title: t('quantity'),
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (_: any, record: any) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'nowrap' }}>
-          <Button 
-            size="small" 
-            onClick={() => decreaseQty(record.Id)} 
-            disabled={record.quantity <= 1}
-            style={isDark ? { background: '#23272f', color: '#ededed', borderColor: '#444', minWidth: 28, height: 28, padding: 0 } : { minWidth: 28, height: 28, padding: 0 }}
-          >-</Button>
-          <InputNumber 
-            min={1} 
-            value={record.quantity} 
-            readOnly 
-            style={{ 
-              width: 44, 
-              background: isDark ? '#23272f' : undefined, 
-              color: isDark ? '#ededed' : undefined, 
-              borderColor: isDark ? '#444' : undefined,
-              caretColor: isDark ? '#a259ff' : undefined,
-              textAlign: 'center',
-              height: 28
-            }} 
-          />
-          <Button 
-            size="small" 
-            onClick={() => increaseQty(record.Id)}
-            style={isDark ? { background: '#23272f', color: '#ededed', borderColor: '#444', minWidth: 28, height: 28, padding: 0 } : { minWidth: 28, height: 28, padding: 0 }}
-          >+</Button>
-        </div>
-      ),
-    },
-    {
-      title: t('total'),
-      key: "total",
-      render: (_: any, record: any) => `${(record.Price * record.quantity).toFixed(2)} ₺`,
-    },
-    {
-      title: "",
-      key: "actions",
-      render: (_: any, record: any) => (
-        <Button 
-          danger 
-          onClick={() => removeFromCart(record.Id)} 
-          icon={<DeleteOutlined />} 
-          aria-label={t('remove')}
-          style={{ minWidth: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
-        />
-      ),
-    },
-  ];
-
   if (initialLoading) {
     return (
       <div style={{
@@ -144,20 +68,27 @@ export default function CartPage() {
         <Empty description={t('your_cart_is_empty')} style={{ margin: 48 }} />
       ) : (
         <>
-          <div style={{ width: '100%', overflowX: 'auto', marginBottom: 24 }}>
-            <Table
-              dataSource={cart}
-              columns={columns.map(col => ({
-                ...col,
-                responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
-                onHeaderCell: () => ({ style: { padding: '8px 8px', fontSize: 15 } })
-              }))}
-              rowKey="Id"
-              pagination={false}
-              style={{ width: '100%' }}
-              scroll={undefined}
-              size="middle"
-            />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 32 }}>
+            {cart.map(item => (
+              <Card key={item.Id} style={{ width: '100%', maxWidth: 600, margin: '0 auto', padding: 12 }} bodyStyle={{ padding: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                  <img src={item.Image} alt={item.Name} style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8 }} />
+                  <div style={{ flex: 1, minWidth: 120 }}>
+                    <Link href={`/products/${encodeURIComponent(item.Category)}/${item.Id}`}>
+                      <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4, wordBreak: 'break-word' }}>{item.Name}</div>
+                    </Link>
+                    <div style={{ color: '#888', fontSize: 14 }}>{item.Price} ₺</div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <Button size="small" onClick={() => decreaseQty(item.Id)} disabled={item.quantity <= 1} style={{ minWidth: 28, height: 28, padding: 0 }}>-</Button>
+                    <InputNumber min={1} value={item.quantity} readOnly style={{ width: 44, textAlign: 'center', height: 28 }} />
+                    <Button size="small" onClick={() => increaseQty(item.Id)} style={{ minWidth: 28, height: 28, padding: 0 }}>+</Button>
+                  </div>
+                  <div style={{ fontWeight: 500, fontSize: 15, marginLeft: 12, minWidth: 60, textAlign: 'right' }}>{(item.Price * item.quantity).toFixed(2)} ₺</div>
+                  <Button type="text" danger onClick={() => removeFromCart(item.Id)} icon={<DeleteOutlined />} style={{ minWidth: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, marginLeft: 8 }} />
+                </div>
+              </Card>
+            ))}
           </div>
           <Card
             style={{
