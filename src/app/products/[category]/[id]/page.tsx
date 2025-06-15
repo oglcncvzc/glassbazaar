@@ -98,20 +98,19 @@ export default function ProductDetail() {
         ]}
       />
       <Row gutter={[32, 32]} align="stretch" style={{ minHeight: 400, justifyContent: 'flex-start' }}>
-        <Col xs={24} md={15} style={{ display: 'flex', justifyContent: 'flex-start', maxWidth: 850, paddingLeft: 0 }}>
+        <Col xs={24} md={15} style={{ display: 'flex',paddingRight:0, justifyContent: 'flex-start', maxWidth: 850, paddingLeft: 0 }}>
           <Card 
             variant="borderless" 
             style={{ 
               width: '100%', 
-              maxWidth: 850, 
+              maxWidth: screen.width > 768 ? 850 : undefined, 
               minHeight: 340,
               display: 'flex',
               flexDirection: 'column',
               gap: 28,
-              padding: 40,
+              padding: screen.width > 768 ? 40 : 0,
               background: isDark ? '#181818' : '#fff',
-              marginLeft: 32,
-              marginRight: 0,
+              margin: '0 16px',
               boxSizing: 'border-box',
               flex: 1,
               alignItems: 'stretch',
@@ -140,7 +139,7 @@ export default function ProductDetail() {
                 <Paragraph strong style={{ marginBottom: 8, fontSize: 18 }}>{t('price')}: <span style={{fontWeight:600}}>{product.Price} ₺</span></Paragraph>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
                   <span style={{ marginRight: 8 }}>{t('rating')}:</span>
-                  <Rate style={{ fontSize: 18 }} allowHalf disabled value={product.Rating} />
+                  <Rate style={{ fontSize: 14 }} allowHalf disabled value={product.Rating} />
                   <span style={{ marginLeft: 8 }}>{product.Rating}</span>
                 </div>
                 <Paragraph style={{ marginBottom: 8 }}>{t('stock')}: {product.InStock ? t('available') : t('out_of_stock')}</Paragraph>
@@ -171,20 +170,21 @@ export default function ProductDetail() {
         {related.length > 0 && (
           <Col xs={24} md={12} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
             <div style={{ position: 'sticky', top: 32, zIndex: 2 }}>
-              <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('similar_products')}</span>} variant="borderless" style={{ width: '100%', maxWidth: 900, background: isDark ? '#181818' : undefined, minHeight: 400, margin: '0 auto' }}>
+              <Card title={<span style={{ color: isDark ? '#ededed' : '#171717' }}>{t('similar_products')}</span>} variant="borderless" style={{ width: '100%', maxWidth: 900, background: isDark ? '#181818' : undefined, minHeight: 400, margin: '0 auto',borderRadius: 18,boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07)' }}>
                 <Row gutter={[16, 16]} justify="start">
                   {related.slice(0, 6).map((rel: any) => (
-                    <Col xs={12} md={8} key={rel.Id} style={{ display: 'flex' }}>
+                    <Col xs={24} md={8} key={rel.Id} style={{ display: 'flex' }}>
                       <Link href={`/products/${rel.Category}/${rel.Id}`} style={{ width: '100%', height: '100%' }}>
                         <Card
                           hoverable
                           cover={<img alt={rel.Name} src={rel.Image} style={{ height: 120, objectFit: "cover", width: '100%' }} />}
                           variant="borderless"
-                          style={{ height: '100%', minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 12 }}
+                          style={{ height: '100%', minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 12,borderRadius: 18,
+              boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07)', }}
                         >
                           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
                             <Card.Meta title={rel.Name} description={`${t('price')}: ${rel.Price} ₺`} />
-                            <div style={{ display: 'flex', alignItems: 'center', margin: '8px 0 0 0' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', marginTop: 4, whiteSpace: 'nowrap' }}>
                               <Rate style={{ fontSize: 14 }} allowHalf disabled value={rel.Rating} />
                               <span style={{ marginLeft: 6, fontSize: 13, color: '#888' }}>{rel.Rating}</span>
                             </div>
