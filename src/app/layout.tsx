@@ -288,9 +288,13 @@ function LanguageDropdown({ lang, onChange }: { lang: string, onChange: (lng: st
   const itemSelectedBg = isDark ? '#2d323c' : '#f5f5f5';
   const itemHoverBg = isDark ? '#313743' : '#f0f0f0';
   const itemColor = isDark ? '#eee' : '#222';
+  const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const iconHeight = windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40;
+  const langBtnHeight = iconHeight + 1;
+  const langFontSize = windowWidth < 600 ? 13 : windowWidth < 768 ? 15 : 17;
   return (
     <div style={{ position: 'relative', zIndex: 999 }}>
-      <Button type="text" onClick={() => setOpen(o => !o)} style={{ minWidth: 32, padding: '0 8px', height: 32, fontWeight: 500, fontSize: 14, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: itemColor, background: isDark ? '#23272f' : '#fff', border: isDark ? '1px solid #333' : undefined }}>
+      <Button type="text" onClick={() => setOpen(o => !o)} style={{ minWidth: 32, padding: '0 8px', height: langBtnHeight, fontWeight: 500, fontSize: langFontSize, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: itemColor, background: isDark ? '#23272f' : '#fff', border: isDark ? '1px solid #333' : undefined }}>
         {lang === 'tr' ? t('turkish') : t('english')} <DownOutlined style={{ fontSize: 12, marginLeft: 2 }} />
       </Button>
       {open && (

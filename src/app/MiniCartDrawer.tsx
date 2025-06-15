@@ -5,6 +5,7 @@ import { useProducts } from '../data/ProductContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from './layout';
 import Link from 'next/link';
+import { CloseOutlined } from '@ant-design/icons';
 
 export default function MiniCartDrawer({ 
   open, 
@@ -64,6 +65,7 @@ export default function MiniCartDrawer({
             color: isDark ? '#ededed' : undefined,
           }
         }}
+        closeIcon={isDark ? <CloseOutlined style={{ color: '#ededed', fontSize: 20 }} /> : undefined}
       >
         <CartListContent cart={cart} products={products} increaseQty={increaseQty} decreaseQty={decreaseQty} onClose={onClose} router={router} />
       </Drawer>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useContext } from 'react';
 import { SearchContext, useTranslation } from '../layout';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -62,17 +62,33 @@ export default function CartPage() {
       dataIndex: "quantity",
       key: "quantity",
       render: (_: any, record: any) => (
-        <Row align="middle" gutter={4}>
-          <Col>
-            <Button size="small" onClick={() => decreaseQty(record.Id)} disabled={record.quantity <= 1}>-</Button>
-          </Col>
-          <Col>
-            <InputNumber min={1} value={record.quantity} readOnly style={{ width: 48 }} />
-          </Col>
-          <Col>
-            <Button size="small" onClick={() => increaseQty(record.Id)}>+</Button>
-          </Col>
-        </Row>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'nowrap' }}>
+          <Button 
+            size="small" 
+            onClick={() => decreaseQty(record.Id)} 
+            disabled={record.quantity <= 1}
+            style={isDark ? { background: '#23272f', color: '#ededed', borderColor: '#444', minWidth: 28, height: 28, padding: 0 } : { minWidth: 28, height: 28, padding: 0 }}
+          >-</Button>
+          <InputNumber 
+            min={1} 
+            value={record.quantity} 
+            readOnly 
+            style={{ 
+              width: 44, 
+              background: isDark ? '#23272f' : undefined, 
+              color: isDark ? '#ededed' : undefined, 
+              borderColor: isDark ? '#444' : undefined,
+              caretColor: isDark ? '#a259ff' : undefined,
+              textAlign: 'center',
+              height: 28
+            }} 
+          />
+          <Button 
+            size="small" 
+            onClick={() => increaseQty(record.Id)}
+            style={isDark ? { background: '#23272f', color: '#ededed', borderColor: '#444', minWidth: 28, height: 28, padding: 0 } : { minWidth: 28, height: 28, padding: 0 }}
+          >+</Button>
+        </div>
       ),
     },
     {
@@ -84,7 +100,13 @@ export default function CartPage() {
       title: "",
       key: "actions",
       render: (_: any, record: any) => (
-        <Button danger onClick={() => removeFromCart(record.Id)}>{t('remove')}</Button>
+        <Button 
+          danger 
+          onClick={() => removeFromCart(record.Id)} 
+          icon={<DeleteOutlined />} 
+          aria-label={t('remove')}
+          style={{ minWidth: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}
+        />
       ),
     },
   ];
@@ -105,37 +127,62 @@ export default function CartPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
+    <div
+      style={{
+        padding: '16px',
+        maxWidth: 900,
+        margin: '0 auto',
+        width: '100%',
+        boxSizing: 'border-box',
+      }}
+    >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 40, width: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }} />
-        <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>{t('my_cart')}</div>
+        <Button type="text" onClick={() => router.push('/')} icon={<ArrowLeftOutlined />} size="middle" style={{ height: 36, width: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }} />
+        <div style={{ fontSize: 'clamp(20px, 5vw, 28px)', fontWeight: 700, lineHeight: 1, margin: 0, color: isDark ? '#ededed' : '#171717' }}>{t('my_cart')}</div>
       </div>
       {cart.length === 0 ? (
         <Empty description={t('your_cart_is_empty')} style={{ margin: 48 }} />
       ) : (
         <>
-          <Table
-            dataSource={cart}
-            columns={columns}
-            rowKey="Id"
-            pagination={false}
-            style={{ marginBottom: 32 }}
-            scroll={{ x: true }}
-          />
-          <Card style={{ maxWidth: 400, margin: "0 auto" }}>
-            <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 12 }}>
+          <div style={{ width: '100%', overflowX: 'auto', marginBottom: 24 }}>
+            <Table
+              dataSource={cart}
+              columns={columns.map(col => ({
+                ...col,
+                responsive: ['xs', 'sm', 'md', 'lg', 'xl'],
+                onHeaderCell: () => ({ style: { padding: '8px 8px', fontSize: 15 } })
+              }))}
+              rowKey="Id"
+              pagination={false}
+              style={{ width: '100%' }}
+              scroll={undefined}
+              size="middle"
+            />
+          </div>
+          <Card
+            style={{
+              maxWidth: 420,
+              margin: '0 auto',
+              width: '100%',
+              boxSizing: 'border-box',
+              padding: '16px 12px',
+            }}
+            bodyStyle={{ padding: 0 }}
+          >
+            <div style={{ fontWeight: 600, fontSize: 'clamp(16px, 4vw, 20px)', marginBottom: 12, textAlign: 'center' }}>
               {t('total')}: {total.toFixed(2)} ₺
             </div>
-            <Row gutter={12}>
-              <Col span={12}>
+            <Row gutter={8} style={{ width: '100%' }}>
+              <Col xs={24} sm={12} style={{ marginBottom: 8 }}>
                 <Link href="/products">
-                  <Button block>{t('continue_shopping')}</Button>
+                  <Button block size="large">{t('continue_shopping')}</Button>
                 </Link>
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12} style={{ marginBottom: 8 }}>
                 <Button
                   type="primary"
                   block
+                  size="large"
                   onClick={() => {
                     message.success(t('purchase_simulated'));
                     clearCart();
