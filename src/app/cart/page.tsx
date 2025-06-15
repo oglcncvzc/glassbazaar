@@ -54,7 +54,6 @@ export default function CartPage() {
     <div
       style={{
         padding: '16px',
-        maxWidth: 900,
         margin: '0 auto',
         width: '100%',
         boxSizing: 'border-box',
