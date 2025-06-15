@@ -52,7 +52,7 @@ function CartButtonWithBadge({
   const cartCount = cart && Array.isArray(cart) ? cart.reduce((sum, item) => sum + item.quantity, 0) : 0;
   return (
     <>
-      <div ref={cartButtonRef}>
+      <div ref={cartButtonRef} style={{ marginRight: 8 }}>
         <Badge count={cartCount} overflowCount={99} showZero style={{ backgroundColor: 'transparent', color: 'purple', border: 'none' }} offset={[0, 8]}>
           <Button 
           type="text"
@@ -199,8 +199,8 @@ export default function RootLayout({
                   alignItems: 'center',
                   justifyContent: 'flex-start',
                   gap: windowWidth < 600 ? 2 : windowWidth < 768 ? 6 : 16,
-                  height: windowWidth < 600 ? 38 : windowWidth < 768 ? 48 : 64,
-                  padding: windowWidth < 600 ? '0 2px' : windowWidth < 768 ? '0 8px' : '0 32px',
+                  height: windowWidth < 600 ? 48 : windowWidth < 768 ? 56 : 80,
+                  padding: windowWidth < 600 ? '0 8px' : windowWidth < 768 ? '0 16px' : '0 48px',
                   boxShadow: '0 2px 8px #0001',
                   position: 'sticky',
                   top: 0,
@@ -238,7 +238,7 @@ export default function RootLayout({
                     />
                   </div>
                                     {/* Dil seçici dropdown */}
-                                    <div style={{ marginLeft: 8, marginRight: 8, flexShrink: 0 }}>
+                                    <div style={{ flexShrink: 0 }}>
                     <LanguageDropdown lang={lang} onChange={handleLangChange} />
                   </div>
                   {/* Sağ aksiyonlar */}
@@ -252,7 +252,7 @@ export default function RootLayout({
                       isCartOpen={isCartOpen}
                       MiniCartDrawer={MiniCartDrawer}
                     />
-                    <Button type="text" shape="circle" onClick={toggleTheme} style={{  color: iconColor, height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined }}>
+                    <Button type="text" shape="circle" onClick={toggleTheme} style={{  color: iconColor, height: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, width: windowWidth < 600 ? 22 : windowWidth < 768 ? 32 : 40, minWidth: 0, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: windowWidth < 600 ? 12 : windowWidth < 768 ? 16 : undefined, marginRight: 8 }}>
                       {clientTheme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
                     </Button>
                     {clientIsLoggedIn && (
